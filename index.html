@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ar" id="html-tag">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">تفاصيل الموقع</title>
+    <style>
+        :root { --primary: #667eea; --secondary: #764ba2; --bg: #f8f9fa; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin:0; background: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .details-card { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 500px; width: 100%; text-align: center; }
+        .header-title { font-size: 2em; color: var(--primary); margin-bottom: 10px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .info-row { display: flex; justify-content: space-between; margin: 15px 0; font-size: 1.1em; color: #444; }
+        .booking-section { margin-top: 30px; padding-top: 20px; border-top: 2px dashed #eee; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; font-family: inherit; }
+        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; cursor: pointer; font-weight: bold; font-size: 1em; transition: 0.3s; margin-top: 10px; }
+        .btn-book { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; }
+        .btn-book:hover { opacity: 0.9; transform: translateY(-2px); }
+        .btn-back { background: #eee; color: #666; text-decoration: none; display: inline-block; line-height: 1.5; }
+        .no-booking-msg { background: #fff3e0; color: #ef6c00; padding: 15px; border-radius: 10px; font-weight: bold; margin-top: 20px; border: 1px solid #ffe0b2; }
+    </style>
+</head>
+<body>
+
+<div class="details-card">
+    <div id="place-name" class="header-title">جاري التحميل...</div>
+    
+    <div class="info-row">
+        <span id="lbl-loc">📍 الموقع:</span>
+        <span id="place-loc"></span>
+    </div>
+    <div class="info-row">
+        <span id="lbl-total-cost">💰 السعر الإجمالي المتوقع:</span>
+        <span id="place-cost"></span>
+    </div>
+
+    <!-- قسم الحجز -->
+    <div id="booking-area" class="booking-section" style="display:none;">
+        <label id="lbl-name" style="display:block; text-align:start; font-weight:bold;"></label>
+        <input type="text" id="user-name" placeholder="">
+        
+        <label id="lbl-date" style="display:block; text-align:start; font-weight:bold;"></label>
+        <input type="date" id="visit-date">
+        
+        <button class="btn btn-book" onclick="confirmBooking()" id="btn-confirm"></button>
+    </div>
+
+    <!-- قسم الأماكن العامة (التي لا تحتاج حجز) -->
+    <div id="no-booking-area" class="no-booking-msg" style="display:none;"></div>
+
+    <a href="index.html" class="btn btn-back" id="btn-back">العودة</a>
+</div>
+
+<script>
+    const data = JSON.parse(localStorage.getItem('selectedPlace'));
+    
+    // إذا كنت تريد السماح بالحجز لكل الفئات، اترك المصفوفة فارغة أو أضف كل الفئات إليها
+    // حالياً أضفت 'public' لتعمل معك إذا كان المكان مصنفاً كعام
+    const bookableCategories = ['restaurant', 'cafe', 'kids', 'relax', 'public'];
+
+    const translations = {
+        ar: {
+            title: "تفاصيل الموقع", loc: "📍 الموقع:", cost: "💰 السعر المتوقع:",
+            name: "اسم المحجز:", namePlaceholder: "أدخل اسمك الكامل",
+            date: "تاريخ الزيارة:", btnConfirm: "تأكيد الحجز الافتراضي",
+            btnBack: "العودة للملف الرئيسي",
+            noBooking: "هذا الموقع متاح للزيارة العامة ولا يتطلب حجزاً مسبقاً.",
+            alert: "تم تأكيد حجزك بنجاح في "
+        },
+        en: {
+            title: "Place Details", loc: "📍 Location:", cost: "💰 Expected Cost:",
+            name: "Full Name:", namePlaceholder: "Enter your full name",
+            date: "Visit Date:", btnConfirm: "Confirm Virtual Booking",
+            btnBack: "Back to Home",
+            noBooking: "This location is open for public access and does not require a prior reservation.",
+            alert: "Your booking has been confirmed at "
+        }
+    };
+
+    function init() {
+        if (!data) { window.location.href = "index.html"; return; }
+
+        const lang = data.currentLang || 'ar';
+        const t = translations[lang];
+        
+        document.getElementById('html-tag').dir = lang === 'ar' ? 'rtl' : 'ltr';
+        document.getElementById('html-tag').lang = lang;
+
+        // تعبئة البيانات
+        document.getElementById('place-name').textContent = lang === 'ar' ? data.n_ar : data.n_en;
+        document.getElementById('place-loc').textContent = lang === 'ar' ? data.loc_ar : data.loc_en;
+        document.getElementById('place-cost').textContent = data.totalCost + " JOD";
+
+        // النصوص
+        document.getElementById('page-title').textContent = t.title;
+        document.getElementById('lbl-loc').textContent = t.loc;
+        document.getElementById('lbl-total-cost').textContent = t.cost;
+        document.getElementById('lbl-name').textContent = t.name;
+        document.getElementById('user-name').placeholder = t.namePlaceholder;
+        document.getElementById('lbl-date').textContent = t.date;
+        document.getElementById('btn-confirm').textContent = t.btnConfirm;
+        document.getElementById('btn-back').textContent = t.btnBack;
+        document.getElementById('no-booking-area').textContent = t.noBooking;
+
+        // فحص إمكانية الحجز
+        if (bookableCategories.includes(data.cat)) {
+            document.getElementById('booking-area').style.display = 'block';
+        } else {
+            document.getElementById('no-booking-area').style.display = 'block';
+        }
+    }
+
+    function confirmBooking() {
+        const lang = data.currentLang || 'ar';
+        const user = document.getElementById('user-name').value.trim();
+        const date = document.getElementById('visit-date').value;
+        const t = translations[lang];
+
+        if(!user || !date) {
+            alert(lang === 'ar' ? "يرجى إكمال البيانات (الاسم والتاريخ)" : "Please fill in all fields");
+            return;
+        }
+        alert(t.alert + (lang === 'ar' ? data.n_ar : data.n_en));
+        window.location.href = "index.html";
+    }
+
+    init();
+</script>
+</body>
+</html>
