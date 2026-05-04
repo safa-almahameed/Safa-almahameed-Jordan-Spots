@@ -1,82 +1,16 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl" id="html-tag">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jordan Spots | Details</title>
-    <style>
-        :root { --primary: #667eea; --secondary: #764ba2; --bg: #f8f9fa; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .details-container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); max-width: 450px; width: 90%; text-align: center; }
-        h1 { margin-bottom: 5px; font-size: 1.8em; }
-        #place-info { font-size: 1em; color: #666; margin-bottom: 20px; }
-        
-        /* التنسيقات التي طلبتِها */
-        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; text-align: inherit; font-family: inherit; }
-        .warning-text { color: #d32f2f; font-size: 0.8em; font-weight: bold; margin: 10px 0; display: block; line-height: 1.4; }
-
-        /* تنسيقات منطقة الحجز */
-        .booking-box { background: #f0f4ff; padding: 20px; border-radius: 15px; border: 1px dashed var(--primary); margin-bottom: 15px; }
-        .no-booking-box { background: #fff3e0; color: #e65100; padding: 20px; border-radius: 15px; font-weight: bold; margin-bottom: 15px; }
-        
-        /* تنسيق الأزرار */
-        button { width: 100%; padding: 14px; border-radius: 10px; cursor: pointer; font-size: 1em; font-weight: bold; transition: 0.3s; border: none; color: white; margin-top: 5px; }
-        #confirm-btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
-        #back-home-btn { background: #666; margin-top: 10px; }
-        button:hover { opacity: 0.9; transform: translateY(-2px); }
-        
-        label { display: block; text-align: inherit; margin-top: 10px; font-weight: bold; font-size: 0.9em; color: #444; }
-        .edu-tag { font-size: 0.7em; color: #999; margin-top: 15px; font-style: italic; display: block; }
-    </style>
-</head>
-<body>
-    <div class="details-container">
-        <h1 id="place-name"></h1>
-        <div id="place-info"></div>
-
-        <!-- هاد الجزء اللي بتستبدليه بس -->
-        <div id="booking-area" style="display: none;">
-            <div class="booking-box">
-                <h3 id="book-header">Confirm Booking</h3>
-                
-                <label id="lbl-name"></label>
-                <input type="text" id="user-name">
-                
-                <label id="lbl-date"></label>
-                <input type="date" id="book-date">
-                
-                <span class="warning-text" id="warning-msg"></span>
-                
-                <button onclick="confirmBooking()" id="confirm-btn"></button>
-            </div>
-        </div>
-
-        <div id="no-booking-area" style="display: none;">
-            <div class="no-booking-box" id="no-book-desc"></div>
-        </div>
-
-        <button onclick="window.location.href='index.html'" class="back-btn" id="back-home-btn"></button>
-    </div>
-
-
 <script>
-    // استرجاع البيانات التي تم حفظها عند الضغط على المكان في الصفحة الرئيسية
     const rawData = localStorage.getItem('selectedPlace');
     
     if (rawData) {
         const data = JSON.parse(rawData);
         const isAr = data.currentLang === 'ar';
-        
-        // تحديد اتجاه الصفحة بناءً على اللغة (يمين لليسار للعربي)
         document.getElementById('html-tag').dir = isAr ? 'rtl' : 'ltr';
 
-        // تعبئة بيانات اسم المكان والمعلومات الأساسية
         document.getElementById('place-name').textContent = isAr ? data.n_ar : data.n_en;
         document.getElementById('place-info').innerHTML = `
             ${isAr ? data.loc_ar : data.loc_en} | 💰 ${data.totalCost} JD 📍
         `;
 
-        // منطق التحكم في ظهور منطقة الحجز أو الدخول العام
         if (data.canBook === true) {
             document.getElementById('booking-area').style.display = 'block';
             document.getElementById('no-booking-area').style.display = 'none';
@@ -85,12 +19,13 @@
             document.getElementById('no-booking-area').style.display = 'block';
         }
 
-        // نظام الترجمة الشامل للأزرار والخانات والرسائل
         if (isAr) {
             document.getElementById('book-header').textContent = "تأكيد الحجز";
             document.getElementById('lbl-name').textContent = "الاسم الكامل:";
             document.getElementById('user-name').placeholder = "أدخل اسمك هنا...";
             document.getElementById('lbl-date').textContent = "تاريخ الزيارة:";
+            document.getElementById('lbl-phone').textContent = "رقم الهاتف:";
+            document.getElementById('user-phone').placeholder = "أدخل رقم هاتفك...";
             document.getElementById('warning-msg').textContent = "⚠️ لو ما اجيت بالموعد المحدد لحجزك رح يلتغي الحجز.";
             document.getElementById('confirm-btn').textContent = "تأكيد الحجز الآن";
             document.getElementById('no-book-desc').textContent = "هذا الموقع متاح للدخول العام ولا يتطلب حجزاً مسبقاً.";
@@ -100,6 +35,8 @@
             document.getElementById('lbl-name').textContent = "Full Name:";
             document.getElementById('user-name').placeholder = "Enter your name...";
             document.getElementById('lbl-date').textContent = "Visit Date:";
+            document.getElementById('lbl-phone').textContent = "Phone Number:";
+            document.getElementById('user-phone').placeholder = "Enter phone number...";
             document.getElementById('warning-msg').textContent = "⚠️ If you don't show up on time, your booking will be cancelled.";
             document.getElementById('confirm-btn').textContent = "Confirm Booking Now";
             document.getElementById('no-book-desc').textContent = "This site is open for public access and no booking is required.";
@@ -107,26 +44,22 @@
         }
     }
 
-    // وظيفة الضغط على زر التأكيد
     function confirmBooking() {
         const name = document.getElementById('user-name').value;
         const date = document.getElementById('book-date').value;
+        const phone = document.getElementById('user-phone').value; // قراءة رقم التلفون
         const isAr = document.getElementById('html-tag').dir === 'rtl';
 
-        // التأكد من أن المستخدم أدخل بياناته
-        if (!name || !date) {
-            alert(isAr ? "الرجاء إدخال الاسم والتاريخ أولاً" : "Please enter your name and date first");
+        // التأكد من تعبئة جميع الخانات بما فيها الهاتف
+        if (!name || !date || !phone) {
+            alert(isAr ? "الرجاء إدخال الاسم والتاريخ ورقم الهاتف أولاً" : "Please enter your name, date, and phone number first");
             return;
         }
 
-        // رسالة نجاح الحجز
-        alert(isAr ? `تم تأكيد حجزك يا ${name} بتاريخ ${date}` : `Booking confirmed for ${name} on ${date}`);
+        // إظهار الرقم في رسالة التأكيد
+        alert(isAr ? `تم تأكيد حجزك يا ${name} بتاريخ ${date}. سنقوم بالتواصل معك على الرقم ${phone}` : 
+                     `Booking confirmed for ${name} on ${date}. We will contact you at ${phone}`);
         
-        // العودة للصفحة الرئيسية بعد الحجز
         window.location.href = "index.html";
     }
 </script>
-
-
-</body>
-</html>
