@@ -77,7 +77,7 @@ const translations = {
 };
 
 const places = [
-    // UNIVERSITIES
+    // --- UNIVERSITIES ---
     {n_ar:"الجامعة الأردنية", n_en:"University of Jordan", cat:"university", cost:1500, loc_ar:"الجبيهة", loc_en:"Jubeiha", rate:4.3},
     {n_ar:"جامعة الأميرة سمية", n_en:"PSUT", cat:"university", cost:4000, loc_ar:"خلدا", loc_en:"Khalda", rate:4.5},
     {n_ar:"جامعة العلوم التطبيقية", n_en:"ASU", cat:"university", cost:3500, loc_ar:"شفا بدران", loc_en:"Shafa Badran", rate:4.1},
@@ -89,7 +89,7 @@ const places = [
     {n_ar:"جامعة الإسراء", n_en:"Isra University", cat:"university", cost:2500, loc_ar:"طريق المطار", loc_en:"Airport Road", rate:3.9},
     {n_ar:"جامعة عمان الأهلية", n_en:"Al-Ahliyya Amman", cat:"university", cost:3000, loc_ar:"السلط", loc_en:"Salt", rate:4.0},
 
-    // SCHOOLS
+    // --- SCHOOLS ---
     {n_ar:"كينغز أكاديمي", n_en:"King’s Academy", cat:"school", cost:15000, loc_ar:"مادبا", loc_en:"Madaba", rate:4.8},
     {n_ar:"الأكاديمية الدولية", n_en:"IAA", cat:"school", cost:8000, loc_ar:"طريق المطار", loc_en:"Airport Road", rate:4.5},
     {n_ar:"مدرسة البكالوريا", n_en:"Amman Baccalaureate", cat:"school", cost:7000, loc_ar:"خلدا", loc_en:"Khalda", rate:4.6},
@@ -101,7 +101,7 @@ const places = [
     {n_ar:"مدرسة اليوبيل", n_en:"Jubilee School", cat:"school", cost:2000, loc_ar:"الجبيهة", loc_en:"Jubeiha", rate:4.7},
     {n_ar:"مدارس الرواد الدولية", n_en:"Al Rowad", cat:"school", cost:3000, loc_ar:"ضاحية الرشيد", loc_en:"Al-Rasheed", rate:4.1},
 
-    // MALLS
+    // --- MALLS ---
     {n_ar:"سيتي مول", n_en:"City Mall", cat:"mall", cost:10, loc_ar:"المدينة الطبية", loc_en:"Medical City", rate:4.5},
     {n_ar:"مكة مول", n_en:"Mecca Mall", cat:"mall", cost:5, loc_ar:"شارع مكة", loc_en:"Mecca St", rate:4.3},
     {n_ar:"تاج مول", n_en:"Taj Mall", cat:"mall", cost:20, loc_ar:"عبدون", loc_en:"Abdoun", rate:4.6},
@@ -113,7 +113,8 @@ const places = [
     {n_ar:"بلازا مول", n_en:"Plaza Mall", cat:"mall", cost:5, loc_ar:"الجبيهة", loc_en:"Jubeiha", rate:4.0},
     {n_ar:"أفينيو مول", n_en:"Avenue Mall", cat:"mall", cost:5, loc_ar:"الزرقاء", loc_en:"Zarqa", rate:4.1},
 
-    // CAFES
+    // --- CAFES ---
+
     {n_ar:"كوستا كوفي", n_en:"Costa Coffee", cat:"cafe", cost:3, loc_ar:"عدة فروع", loc_en:"Branches", rate:4.1},
     {n_ar:"رومي كافيه", n_en:"Rumi Cafe", cat:"cafe", cost:4, loc_ar:"اللويبدة", loc_en:"Webdeh", rate:4.6},
     {n_ar:"بوكس آت كافيه", n_en:"Books@Cafe", cat:"cafe", cost:5, loc_ar:"جبل عمان", loc_en:"Jabal Amman", rate:4.5},
@@ -123,39 +124,95 @@ const places = [
     {n_ar:"ديمتريز كوفي", n_en:"Dimitri’s Coffee", cat:"cafe", cost:2, loc_ar:"عدة فروع", loc_en:"Branches", rate:4.3},
     {n_ar:"غلوريا جينز", n_en:"Gloria Jean’s", cat:"cafe", cost:3, loc_ar:"فروع", loc_en:"Branches", rate:4.0},
 
-    // RESTAURANTS
+    // --- RESTAURANTS ---
     {n_ar:"مطعم هاشم", n_en:"Hashem Restaurant", cat:"restaurant", cost:2, loc_ar:"وسط البلد", loc_en:"Downtown", rate:4.5},
     {n_ar:"سفرة", n_en:"Sufra Restaurant", cat:"restaurant", cost:10, loc_ar:"الرينبو", loc_en:"Rainbow St", rate:4.6},
     {n_ar:"فخر الدين", n_en:"Fakhreldin", cat:"restaurant", cost:20, loc_ar:"جبل عمان", loc_en:"Jabal Amman", rate:4.7},
     {n_ar:"طواحين الهوا", n_en:"Tawaheen Al Hawa", cat:"restaurant", cost:10, loc_ar:"خلدا", loc_en:"Khalda", rate:4.5},
     {n_ar:"ريم البوادي", n_en:"Reem Al Bawadi", cat:"restaurant", cost:15, loc_ar:"الجبيهة", loc_en:"Jubeiha", rate:4.4},
+    {n_ar:"مطعم جبران", n_en:"Jubran Restaurant", cat:"restaurant", cost:8, loc_ar:"العبدلي", loc_en:"Abdali", rate:4.3},
+    {n_ar:"كان زمان", n_en:"Kan Zaman", cat:"restaurant", cost:15, loc_ar:"طريق المطار", loc_en:"Airport Road", rate:4.5},
+    {n_ar:"حلويات زلاطيمو", n_en:"Zalatimo Sweets", cat:"restaurant", cost:3, loc_ar:"فروع", loc_en:"Branches", rate:4.6},
     {n_ar:"حلويات حبيبة", n_en:"Habibah Sweets", cat:"restaurant", cost:2, loc_ar:"وسط البلد", loc_en:"Downtown", rate:4.7},
     {n_ar:"فلافل القدس", n_en:"AlQuds Falafel", cat:"restaurant", cost:1, loc_ar:"شارع الرينبو", loc_en:"Rainbow St", rate:4.6},
 
-    // HERITAGE
+    // --- HERITAGE (الآن مدمجة ببياناتك الجديدة) ---
     {n_ar:"جبل القلعة", n_en:"Amman Citadel", cat:"heritage", cost:2, loc_ar:"جبل القلعة", loc_en:"Citadel Hill", rate:4.5},
     {n_ar:"المدرج الروماني", n_en:"Roman Theater", cat:"heritage", cost:2, loc_ar:"وسط البلد", loc_en:"Downtown", rate:4.5},
-    {n_ar:"قصر عمرة", n_en:"Qasr Amra", cat:"heritage", cost:3, loc_ar:"الأزرق", loc_en:"Azraq", rate:4.5},
+    {n_ar:"معبد هرقل", n_en:"Temple of Hercules", cat:"heritage", cost:2, loc_ar:"القلعة", loc_en:"Citadel", rate:4.6},
+    {n_ar:"القصر الأموي", n_en:"Umayyad Palace", cat:"heritage", cost:2, loc_ar:"القلعة", loc_en:"Citadel", rate:4.6},
+    {n_ar:"متحف الآثار الأردني", n_en:"Archaeological Museum", cat:"heritage", cost:2, loc_ar:"القلعة", loc_en:"Citadel", rate:4.5},
+    {n_ar:"سبيل الحوريات", n_en:"Nymphaeum", cat:"heritage", cost:0, loc_ar:"وسط البلد", loc_en:"Downtown", rate:4.3},
+    {n_ar:"ديوان الدوق", n_en:"Duke’s Diwan", cat:"heritage", cost:0, loc_ar:"وسط البلد", loc_en:"Downtown", rate:4.4},
+    {n_ar:"سكة حديد الحجاز", n_en:"Hijaz Railway Museum", cat:"heritage", cost:1, loc_ar:"ماركا", loc_en:"Marka", rate:4.2},
+    {n_ar:"قصر العبد", n_en:"Qasr Al-Abd", cat:"heritage", cost:2, loc_ar:"عراق الأمير", loc_en:"Iraq Al-Amir", rate:4.4},
+    {n_ar:"عراق الأمير", n_en:"Iraq Al-Amir", cat:"heritage", cost:1, loc_ar:"عراق الأمير", loc_en:"Iraq Al-Amir", rate:4.5},
     {n_ar:"كهف أهل الكهف", n_en:"Seven Sleepers Cave", cat:"heritage", cost:0, loc_ar:"الرجيب", loc_en:"Rajib", rate:4.3},
+    {n_ar:"قصر المشتى", n_en:"Qasr Al-Mshatta", cat:"heritage", cost:1, loc_ar:"طريق المطار", loc_en:"Airport Road", rate:4.2},
+    {n_ar:"قصر الخرانة", n_en:"Qasr Al-Kharana", cat:"heritage", cost:3, loc_ar:"الأزرق", loc_en:"Azraq", rate:4.4},
+    {n_ar:"قصر عمرة", n_en:"Qasr Amra", cat:"heritage", cost:3, loc_ar:"الأزرق", loc_en:"Azraq", rate:4.5},
 
-    // ENTERTAINMENT
+    // --- ENTERTAINMENT ---
     {n_ar:"حدائق الحسين", n_en:"Al Hussein Parks", cat:"ent", cost:0, loc_ar:"المدينة الطبية", loc_en:"Medical City", rate:4.6},
     {n_ar:"متحف السيارات", n_en:"Royal Automobile Museum", cat:"ent", cost:3, loc_ar:"حدائق الحسين", loc_en:"Parks", rate:4.7},
+    {n_ar:"أكوا فن", n_en:"Aqua Fun", cat:"ent", cost:10, loc_ar:"طريق المطار", loc_en:"Airport Road", rate:4.2},
     {n_ar:"هروب من الغرفة", n_en:"Escape the Room", cat:"ent", cost:8, loc_ar:"الصويفية", loc_en:"Sweifieh", rate:4.4},
+    {n_ar:"سترايكرز", n_en:"Strikers", cat:"ent", cost:5, loc_ar:"الفنادق", loc_en:"Hotels", rate:4.3},
+    {n_ar:"جرافيتي بارك", n_en:"Gravity Park", cat:"ent", cost:7, loc_ar:"خلدا", loc_en:"Khalda", rate:4.4},
+    {n_ar:"بينتبول الأردن", n_en:"Paintball Jordan", cat:"ent", cost:10, loc_ar:"طريق المطار", loc_en:"Airport Road", rate:4.2},
+    {n_ar:"باور هت", n_en:"Power Hut", cat:"ent", cost:3, loc_ar:"عمان", loc_en:"Amman", rate:4.3},
+    {n_ar:"نادي وادي دجلة", n_en:"Wadi Degla Club", cat:"ent", cost:10, loc_ar:"طريق المطار", loc_en:"Airport Road", rate:4.4},
+    {n_ar:"أكشن تارجت", n_en:"Action Target", cat:"ent", cost:15, loc_ar:"المقابلين", loc_en:"Muqabalayn", rate:4.5},
 
-    // RELAX
+    // --- KIDS ---
+    {n_ar:"مركز زها الثقافي", n_en:"Zaha Cultural Center", cat:"kids", cost:0, loc_ar:"خلدا", loc_en:"Khalda", rate:4.7},
+    {n_ar:"فن سيتي", n_en:"Fun City", cat:"kids", cost:5, loc_ar:"مولات", loc_en:"Malls", rate:4.2},
+    {n_ar:"أورانج بلاي", n_en:"Orange Play", cat:"kids", cost:5, loc_ar:"عمان", loc_en:"Amman", rate:4.3},
+    {n_ar:"تشيكي مونكيز", n_en:"Cheeky Monkeys", cat:"kids", cost:6, loc_ar:"عبدون", loc_en:"Abdoun", rate:4.4},
+    {n_ar:"المستكشفون الصغار", n_en:"Little Explorers", cat:"kids", cost:8, loc_ar:"تاج مول", loc_en:"Taj Mall", rate:4.5},
+    {n_ar:"جينغو جنغل", n_en:"Jingo’s Jungle", cat:"kids", cost:5, loc_ar:"سيتي مول", loc_en:"City Mall", rate:4.3},
+    {n_ar:"كيدزانيا عمان", n_en:"Kidzania", cat:"kids", cost:10, loc_ar:"العبدلي", loc_en:"Abdali", rate:4.6},
+    {n_ar:"بلاي تاون", n_en:"Play Town", cat:"kids", cost:5, loc_ar:"عمان", loc_en:"Amman", rate:4.2},
+    {n_ar:"كيدز بلانيت", n_en:"Kids Planet", cat:"kids", cost:4, loc_ar:"عمان", loc_en:"Amman", rate:4.1},
+    {n_ar:"هابي لاند", n_en:"Happy Land", cat:"kids", cost:3, loc_ar:"عمان", loc_en:"Amman", rate:4.0},
+
+    // --- RELAX ---
     {n_ar:"البحر الميت", n_en:"Dead Sea", cat:"relax", cost:20, loc_ar:"الغور", loc_en:"Dead Sea", rate:5.0},
     {n_ar:"حمامات ماعين", n_en:"Ma’in Hot Springs", cat:"relax", cost:15, loc_ar:"مادبا", loc_en:"Madaba", rate:4.7},
+    {n_ar:"تاليسا سبا", n_en:"Talise Spa", cat:"relax", cost:50, loc_ar:"البحر الميت", loc_en:"Dead Sea", rate:4.8},
+    {n_ar:"كمبينسكي عشتار سبا", n_en:"Ishtar Spa", cat:"relax", cost:60, loc_ar:"البحر الميت", loc_en:"Dead Sea", rate:4.8},
+    {n_ar:"موفنبيك البحر الميت سبا", n_en:"Movenpick Spa", cat:"relax", cost:50, loc_ar:"البحر الميت", loc_en:"Dead Sea", rate:4.7},
+    {n_ar:"سبا فندق أياص", n_en:"Ayass Spa", cat:"relax", cost:25, loc_ar:"شارع المدينة", loc_en:"Madina St", rate:4.4},
+    {n_ar:"سبا فور سيزونز", n_en:"Four Seasons Spa", cat:"relax", cost:70, loc_ar:"الدوار الخامس", loc_en:"5th Circle", rate:4.8},
+    {n_ar:"سبا جراند حياة", n_en:"Grand Hyatt Spa", cat:"relax", cost:60, loc_ar:"جبل عمان", loc_en:"Jabal Amman", rate:4.7},
+    {n_ar:"سبا لو رويال", n_en:"Le Royal Spa", cat:"relax", cost:40, loc_ar:"الدوار الثالث", loc_en:"3rd Circle", rate:4.5},
+    {n_ar:"سبا بريستول", n_en:"Bristol Spa", cat:"relax", cost:30, loc_ar:"الدوار الخامس", loc_en:"5th Circle", rate:4.4},
 
-    // LIBRARIES
+    // --- LIBRARIES ---
     {n_ar:"مكتبة شومان", n_en:"Shoman Library", cat:"library", cost:0, loc_ar:"جبل عمان", loc_en:"Jabal Amman", rate:4.8},
     {n_ar:"مكتبة الأردنية", n_en:"JU Library", cat:"library", cost:0, loc_ar:"الجامعة", loc_en:"JU", rate:4.5},
+    {n_ar:"مكتبة هيا الثقافي", n_en:"Haya Center Library", cat:"library", cost:0, loc_ar:"الشميساني", loc_en:"Shmeisani", rate:4.6},
+    {n_ar:"مكتبة أمانة عمان", n_en:"GAM Library", cat:"library", cost:0, loc_ar:"وسط البلد", loc_en:"Downtown", rate:4.2},
+    {n_ar:"متحف الأطفال - مكتبة", n_en:"Children's Museum Lib", cat:"library", cost:2, loc_ar:"حدائق الحسين", loc_en:"Parks", rate:4.7},
+    {n_ar:"ريدرز", n_en:"Readers Bookshop", cat:"library", cost:5, loc_ar:"سيفوي", loc_en:"Safeway", rate:4.4},
+    {n_ar:"المكتبة البريطانية", n_en:"British Council", cat:"library", cost:5, loc_ar:"جبل عمان", loc_en:"Jabal Amman", rate:4.5},
+    {n_ar:"مكتبة كولومبوس", n_en:"Columbus", cat:"library", cost:0, loc_ar:"عمان", loc_en:"Amman", rate:4.3},
+    {n_ar:"مكتبة زها", n_en:"Zaha Library", cat:"library", cost:0, loc_ar:"خلدا", loc_en:"Khalda", rate:4.6},
+    {n_ar:"شومان العامة", n_en:"Public Shoman", cat:"library", cost:0, loc_ar:"المصدار", loc_en:"Al-Misdar", rate:4.8},
 
-    // PHARMACIES
+    // --- PHARMACIES ---
     {n_ar:"دواكم", n_en:"Dawacom", cat:"pharmacy", cost:2, loc_ar:"فروع", loc_en:"Branches", rate:4.2},
-    {n_ar:"فارمسي ون", n_en:"Pharmacy One", cat:"pharmacy", cost:3, loc_ar:"فروع", loc_en:"Branches", rate:4.3}
-    // ملاحظة: تم اختصار القائمة هنا للعرض، لكن الكود يدعم إضافة الـ 110 كاملة بنفس النمط.
+    {n_ar:"فارمسي ون", n_en:"Pharmacy One", cat:"pharmacy", cost:3, loc_ar:"فروع", loc_en:"Branches", rate:4.3},
+    {n_ar:"صيدلية الحياة", n_en:"Al Hayat", cat:"pharmacy", cost:2, loc_ar:"عمان", loc_en:"Amman", rate:4.1},
+    {n_ar:"الصيدليات المتحدة", n_en:"United Pharmacies", cat:"pharmacy", cost:2, loc_ar:"فروع", loc_en:"Branches", rate:4.2},
+    {n_ar:"هيلث بلس", n_en:"Health Plus", cat:"pharmacy", cost:3, loc_ar:"عمان", loc_en:"Amman", rate:4.1},
+    {n_ar:"صيدلية كير", n_en:"Care Pharmacy", cat:"pharmacy", cost:2, loc_ar:"عمان", loc_en:"Amman", rate:4.0},
+    {n_ar:"صيدلية فاميلي", n_en:"Family Pharmacy", cat:"pharmacy", cost:2, loc_ar:"عمان", loc_en:"Amman", rate:4.1},
+    {n_ar:"ويلنس", n_en:"Wellness Pharmacy", cat:"pharmacy", cost:3, loc_ar:"عمان", loc_en:"Amman", rate:4.2},
+    {n_ar:"توتال كير", n_en:"Total Care", cat:"pharmacy", cost:2, loc_ar:"عمان", loc_en:"Amman", rate:4.0},
+    {n_ar:"صيدلية الرازي", n_en:"Al-Razi Pharmacy", cat:"pharmacy", cost:2, loc_ar:"عمان", loc_en:"Amman", rate:4.1}
 ];
+
 
 function toggleLanguage() { currentLang = currentLang === 'ar' ? 'en' : 'ar'; updateUI(); }
 
