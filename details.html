@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تأكيد الحجز | Jordan Spots</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .booking-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 90%; max-width: 500px; }
+        h2 { color: #667eea; border-bottom: 2px solid #f0f2f5; padding-bottom: 10px; margin-top: 0; }
+        .info-item { margin: 15px 0; font-size: 1.1em; color: #444; }
+        .info-item b { color: #764ba2; }
+        input { width: 100%; padding: 12px; margin-top: 10px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; font-family: inherit; }
+        .btn-confirm { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 15px; width: 100%; border-radius: 12px; font-size: 1.1em; font-weight: bold; cursor: pointer; margin-top: 20px; transition: 0.3s; }
+        .btn-confirm:hover { opacity: 0.9; transform: translateY(-2px); }
+        .btn-back { background: #eee; color: #555; border: none; padding: 10px; width: 100%; border-radius: 12px; cursor: pointer; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="booking-card">
+    <h2 id="p-name">جاري التحميل...</h2>
+    <div class="info-item">📍 الموقع: <span id="p-loc">...</span></div>
+    <div class="info-item">💰 السعر الإجمالي المتوقع: <b id="p-price">0</b> JOD</div>
+    
+    <hr>
+    
+    <div class="info-item">
+        <label for="user-name">اسم المحجز:</label>
+        <input type="text" id="user-name" placeholder="أدخل اسمك الكامل">
+    </div>
+    
+    <div class="info-item">
+        <label for="visit-date">تاريخ الزيارة:</label>
+        <input type="date" id="visit-date">
+    </div>
+
+    <button class="btn-confirm" onclick="confirmBooking()">تأكيد الحجز الافتراضي</button>
+    <button class="btn-back" onclick="goBack()">العودة للملف الرئيسي</button>
+</div>
+
+<script>
+    // استرجاع البيانات من localStorage
+    const rawData = localStorage.getItem('selectedPlace');
+    const data = rawData ? JSON.parse(rawData) : null;
+
+    // تعبئة البيانات فور تحميل الصفحة
+    if (data) {
+        document.getElementById('p-name').textContent = data.currentLang === 'ar' ? (data.n_ar || "اسم غير معروف") : (data.n_en || "Unknown Name");
+        document.getElementById('p-loc').textContent = data.currentLang === 'ar' ? (data.loc_ar || "غير محدد") : (data.loc_en || "Not specified");
+        document.getElementById('p-price').textContent = data.totalCost || "0";
+    } else {
+        // إذا دخل المستخدم الصفحة بالخطأ بدون اختيار مكان
+        alert("خطأ: لم يتم اختيار مكان للحجز.");
+        window.location.href = "index.html";
+    }
+
+    function confirmBooking() {
+        const name = document.getElementById('user-name').value.trim();
+        const date = document.getElementById('visit-date').value;
+        const placeName = document.getElementById('p-name').textContent;
+
+        if (!name) {
+            alert("لطفاً أدخل اسمك لإتمام الحجز");
+            return;
+        }
+        if (!date) {
+            alert("لطفاً اختر تاريخ الزيارة");
+            return;
+        }
+
+        // تنفيذ الحجز
+        alert(`تم استلام طلب حجزك يا ${name}\nالمكان: ${placeName}\nالتاريخ: ${date}\nبنجاح!`);
+        
+        // تنظيف البيانات والعودة
+        localStorage.removeItem('selectedPlace'); 
+        window.location.href = "index.html";
+    }
+
+    function goBack() {
+        window.location.href = "index.html";
+    }
+</script>
+
+</body>
+</html>
