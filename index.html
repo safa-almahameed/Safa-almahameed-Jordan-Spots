@@ -1,319 +1,110 @@
 <!DOCTYPE html>
-
-<html lang="ar" id="html-tag">
-
+<html lang="ar" dir="rtl" id="html-tag">
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title></title>
-
-<style>
-
-body{font-family:Arial;margin:0;background:#f5f5f5;}
-
-header{
-
-padding:20px;
-
-text-align:center;
-
-}
-
-input,select{
-
-padding:10px;
-
-margin:5px;
-
-border-radius:8px;
-
-border:1px solid #ccc;
-
-}
-
-.place{
-
-background:white;
-
-margin:10px;
-
-padding:15px;
-
-border-radius:12px;
-
-cursor:pointer;
-
-position:relative;
-
-transition:0.3s;
-
-}
-
-.place:hover{transform:scale(1.02)}
-
-.heart{
-
-position:absolute;
-
-top:10px;
-
-right:10px;
-
-cursor:pointer;
-
-font-size:20px;
-
-}
-
-.rating{
-
-color:gold;
-
-font-size:14px;
-
-margin-top:5px;
-
-}
-
-.toast{
-
-position:fixed;
-
-bottom:20px;
-
-left:50%;
-
-transform:translateX(-50%);
-
-background:#333;
-
-color:white;
-
-padding:10px 20px;
-
-border-radius:10px;
-
-display:none;
-
-}
-
-</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jordan Spots | استكشف الأردن</title>
+    <style>
+        :root { --primary: #667eea; --secondary: #764ba2; --bg: #f8f9fa; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background: var(--bg); color: #333; }
+        header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 20px; text-align: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .lang-btn { position: absolute; top: 20px; left: 20px; background: rgba(255,255,255,0.2); border: 1px solid white; color: white; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: 0.3s; cursor: pointer; border: 1px solid #eee; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .card-body { padding: 20px; text-align: center; }
+        .card-title { font-size: 1.4em; color: var(--primary); margin: 0 0 10px 0; }
+        .card-loc { color: #666; font-size: 0.9em; margin-bottom: 15px; }
+        .btn-view { background: var(--primary); color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block; transition: 0.3s; }
+        .btn-view:hover { background: var(--secondary); }
+    </style>
 </head>
-
 <body>
 
 <header>
-
-<h2 id="title"></h2>
-
-<input id="search">
-
-<select id="filter"></select>
-
-<button onclick="toggleLang()" id="lang-btn"></button>
-
+    <button class="lang-btn" onclick="toggleLang()" id="lang-btn">English</button>
+    <h1 id="main-title">استكشف أجمل المواقع في الأردن</h1>
 </header>
 
-<div id="places"></div>
-
-<div id="toast" class="toast"></div>
-
-<script>
-
-let lang="ar";
-
-const t={
-
-ar:{
-
-title:"المواقع السياحية",
-
-search:"ابحث...",
-
-filter:"فلترة",
-
-lang:"English",
-
-favAdd:"تمت الإضافة للمفضلة ❤️",
-
-favRemove:"تم الحذف 💔"
-
-},
-
-en:{
-
-title:"Tourist Places",
-
-search:"Search...",
-
-filter:"Filter",
-
-lang:"العربية",
-
-favAdd:"Added to favorites ❤️",
-
-favRemove:"Removed 💔"
-
-}
-
-};
-
-const places=[
-
-{n_ar:"مطعم عمان",n_en:"Amman Restaurant",loc_ar:"عمان",loc_en:"Amman",cat:"restaurant"},
-
-{n_ar:"مقهى جميل",n_en:"Nice Cafe",loc_ar:"العبدلي",loc_en:"Abdali",cat:"cafe"}
-
-];
-
-let favorites=JSON.parse(localStorage.getItem("favorites"))||[];
-
-function toast(msg){
-
-const t=document.getElementById("toast");
-
-t.textContent=msg;
-
-t.style.display="block";
-
-setTimeout(()=>t.style.display="none",2000);
-
-}
-
-function render(){
-
-const tr=t[lang];
-
-document.title=tr.title;
-
-document.getElementById("title").textContent=tr.title;
-
-document.getElementById("search").placeholder=tr.search;
-
-document.getElementById("filter").innerHTML=`<option>${tr.filter}</option>`;
-
-document.getElementById("lang-btn").textContent=tr.lang;
-
-document.getElementById("html-tag").dir=lang==="ar"?"rtl":"ltr";
-
-showPlaces(places);
-
-}
-
-function showPlaces(list){
-
-const container=document.getElementById("places");
-
-container.innerHTML="";
-
-list.forEach((p,i)=>{
-
-const fav=favorites.includes(p.n_en);
-
-const div=document.createElement("div");
-
-div.className="place";
-
-div.innerHTML=`
-
-<div class="heart" onclick="toggleFav(event,${i})">
-
-${fav?"❤️":"🤍"}
-
+<div class="container">
+    <div class="grid" id="places-grid">
+        <!-- الأماكن سيتم توليدها برمجياً هنا -->
+    </div>
 </div>
 
-<div>${lang==="ar"?p.n_ar:p.n_en}</div>
+<script>
+    // البيانات الأساسية للأماكن
+    const places = [
+        {
+            id: 1,
+            n_ar: "حدائق الحسين", n_en: "Al Hussein Parks",
+            loc_ar: "عمان - المدينة الطبية", loc_en: "Amman - Medical City",
+            totalCost: 0,
+            cat: "parks" // الفئة المستخدمة في صفحة التفاصيل
+        },
+        {
+            id: 2,
+            n_ar: "وسط البلد", n_en: "Downtown",
+            loc_ar: "عمان القديمة", loc_en: "Old Amman",
+            totalCost: 5,
+            cat: "public"
+        },
+        {
+            id: 3,
+            n_ar: "مطعم ومقهى إطلالة", n_en: "Panorama Restaurant",
+            loc_ar: "عمان - جبل القلعة", loc_en: "Amman - Citadel",
+            totalCost: 15,
+            cat: "restaurant"
+        }
+    ];
 
-<div class="rating">⭐⭐⭐⭐☆</div>
+    let currentLang = 'ar';
 
-`;
+    function renderPlaces() {
+        const grid = document.getElementById('places-grid');
+        grid.innerHTML = '';
 
-div.onclick=()=>openPlace(p);
+        places.forEach(place => {
+            const name = currentLang === 'ar' ? place.n_ar : place.n_en;
+            const loc = currentLang === 'ar' ? place.loc_ar : place.loc_en;
+            const btnText = currentLang === 'ar' ? 'عرض التفاصيل' : 'View Details';
 
-container.appendChild(div);
+            grid.innerHTML += `
+                <div class="card" onclick="goToDetails(${place.id})">
+                    <div class="card-body">
+                        <h3 class="card-title">${name}</h3>
+                        <p class="card-loc">📍 ${loc}</p>
+                        <a href="#" class="btn-view">${btnText}</a>
+                    </div>
+                </div>
+            `;
+        });
+    }
 
-});
+    function toggleLang() {
+        currentLang = currentLang === 'ar' ? 'en' : 'ar';
+        document.getElementById('html-tag').dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+        document.getElementById('html-tag').lang = currentLang;
+        document.getElementById('lang-btn').textContent = currentLang === 'ar' ? 'English' : 'عربي';
+        document.getElementById('main-title').textContent = currentLang === 'ar' ? 
+            'استكشف أجمل المواقع في الأردن' : 'Explore the Best Spots in Jordan';
+        renderPlaces();
+    }
 
-}
+    function goToDetails(id) {
+        const selected = places.find(p => p.id === id);
+        // تخزين البيانات واللغة الحالية لإرسالها لصفحة details.html
+        localStorage.setItem('selectedPlace', JSON.stringify({
+            ...selected,
+            currentLang: currentLang
+        }));
+        window.location.href = "details.html";
+    }
 
-function toggleFav(e,i){
-
-e.stopPropagation();
-
-const place=places[i];
-
-const exists=favorites.includes(place.n_en);
-
-if(exists){
-
-favorites=favorites.filter(f=>f!==place.n_en);
-
-toast(t[lang].favRemove);
-
-}else{
-
-favorites.push(place.n_en);
-
-toast(t[lang].favAdd);
-
-}
-
-localStorage.setItem("favorites",JSON.stringify(favorites));
-
-render();
-
-}
-
-document.getElementById("search").addEventListener("input",function(){
-
-const val=this.value.toLowerCase();
-
-const filtered=places.filter(p=>
-
-(p.n_ar+p.n_en).toLowerCase().includes(val)
-
-);
-
-showPlaces(filtered);
-
-});
-
-function openPlace(p){
-
-const data={
-
-currentLang:lang,
-
-...p,
-
-totalCost:25,
-
-cat:p.cat
-
-};
-
-localStorage.setItem("selectedPlace",JSON.stringify(data));
-
-window.location.href="details.html";
-
-}
-
-function toggleLang(){
-
-lang=lang==="ar"?"en":"ar";
-
-render();
-
-}
-
-render();
-
+    // التشغيل الأولي
+    renderPlaces();
 </script>
 
 </body>
-
 </html>
