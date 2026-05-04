@@ -4,398 +4,313 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title id="page-title">تفاصيل الموقع</title>
+<title></title>
 
-    <style>
+<style>
 
-        :root { --primary: #667eea; --secondary: #764ba2; --bg: #f8f9fa; }
+body{font-family:Arial;margin:0;background:#f5f5f5;}
 
-        body {
+header{
 
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+padding:20px;
 
-            margin:0;
+text-align:center;
 
-            background: var(--bg);
+}
 
-            display: flex;
+input,select{
 
-            justify-content: center;
+padding:10px;
 
-            align-items: center;
+margin:5px;
 
-            min-height: 100vh;
+border-radius:8px;
 
-            padding: 20px;
+border:1px solid #ccc;
 
-        }
+}
 
-        .details-card {
+.place{
 
-            background: white;
+background:white;
 
-            border-radius: 20px;
+margin:10px;
 
-            padding: 30px;
+padding:15px;
 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+border-radius:12px;
 
-            max-width: 500px;
+cursor:pointer;
 
-            width: 100%;
+position:relative;
 
-            text-align: center;
+transition:0.3s;
 
-        }
+}
 
-        .header-title {
+.place:hover{transform:scale(1.02)}
 
-            font-size: 2em;
+.heart{
 
-            color: var(--primary);
+position:absolute;
 
-            margin-bottom: 10px;
+top:10px;
 
-            border-bottom: 2px solid #eee;
+right:10px;
 
-            padding-bottom: 10px;
+cursor:pointer;
 
-        }
+font-size:20px;
 
-        .info-row {
+}
 
-            display: flex;
+.rating{
 
-            justify-content: space-between;
+color:gold;
 
-            margin: 15px 0;
+font-size:14px;
 
-            font-size: 1.1em;
+margin-top:5px;
 
-            color: #444;
+}
 
-        }
+.toast{
 
-        .booking-section {
+position:fixed;
 
-            margin-top: 30px;
+bottom:20px;
 
-            padding-top: 20px;
+left:50%;
 
-            border-top: 2px dashed #eee;
+transform:translateX(-50%);
 
-        }
+background:#333;
 
-        input {
+color:white;
 
-            width: 100%;
+padding:10px 20px;
 
-            padding: 12px;
+border-radius:10px;
 
-            margin: 10px 0;
+display:none;
 
-            border: 1px solid #ddd;
+}
 
-            border-radius: 10px;
-
-            box-sizing: border-box;
-
-            font-family: inherit;
-
-        }
-
-        .btn {
-
-            width: 100%;
-
-            padding: 15px;
-
-            border-radius: 12px;
-
-            border: none;
-
-            cursor: pointer;
-
-            font-weight: bold;
-
-            font-size: 1em;
-
-            margin-top: 10px;
-
-        }
-
-        .btn-book {
-
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-
-            color: white;
-
-        }
-
-        .btn-book:hover {
-
-            opacity: 0.9;
-
-            transform: translateY(-2px);
-
-        }
-
-        .btn-back {
-
-            background: #eee;
-
-            color: #666;
-
-            text-decoration: none;
-
-            display: inline-block;
-
-        }
-
-        .no-booking-msg {
-
-            background: #fff3e0;
-
-            color: #ef6c00;
-
-            padding: 15px;
-
-            border-radius: 10px;
-
-            font-weight: bold;
-
-            margin-top: 20px;
-
-            border: 1px solid #ffe0b2;
-
-        }
-
-    </style>
+</style>
 
 </head>
 
 <body>
 
-<div class="details-card">
+<header>
 
-    <div id="place-name" class="header-title">جاري التحميل...</div>
+<h2 id="title"></h2>
 
-    <div class="info-row">
+<input id="search">
 
-        <span id="lbl-loc">📍 الموقع:</span>
+<select id="filter"></select>
 
-        <span id="place-loc"></span>
+<button onclick="toggleLang()" id="lang-btn"></button>
 
-    </div>
+</header>
 
-    <div class="info-row">
+<div id="places"></div>
 
-        <span id="lbl-total-cost">💰 السعر المتوقع:</span>
-
-        <span id="place-cost"></span>
-
-    </div>
-
-    <!-- قسم الحجز -->
-
-    <div id="booking-area" class="booking-section" style="display:none;">
-
-        <label id="lbl-name"></label>
-
-        <input type="text" id="user-name">
-
-        <label id="lbl-date"></label>
-
-        <input type="date" id="visit-date">
-
-        <button class="btn btn-book" onclick="confirmBooking()" id="btn-confirm"></button>
-
-    </div>
-
-    <!-- قسم الأماكن بدون حجز -->
-
-    <div id="no-booking-area" class="no-booking-msg" style="display:none;"></div>
-
-    <a href="index.html" class="btn btn-back" id="btn-back">العودة</a>
-
-</div>
+<div id="toast" class="toast"></div>
 
 <script>
 
-    let data = null;
+let lang="ar";
 
-    // ✅ حل مشكلة التعليق (حماية JSON)
+const t={
 
-    try {
+ar:{
 
-        const raw = localStorage.getItem('selectedPlace');
+title:"المواقع السياحية",
 
-        data = raw ? JSON.parse(raw) : null;
+search:"ابحث...",
 
-    } catch (e) {
+filter:"فلترة",
 
-        console.error("خطأ في البيانات:", e);
+lang:"English",
 
-        alert("صار خطأ بالبيانات، رح نرجعك للرئيسية");
+favAdd:"تمت الإضافة للمفضلة ❤️",
 
-        localStorage.removeItem('selectedPlace');
+favRemove:"تم الحذف 💔"
 
-        window.location.href = "index.html";
+},
 
-    }
+en:{
 
-    const bookableCategories = ['restaurant', 'cafe', 'kids', 'relax', 'public'];
+title:"Tourist Places",
 
-    const translations = {
+search:"Search...",
 
-        ar: {
+filter:"Filter",
 
-            title: "تفاصيل الموقع",
+lang:"العربية",
 
-            loc: "📍 الموقع:",
+favAdd:"Added to favorites ❤️",
 
-            cost: "💰 السعر المتوقع:",
+favRemove:"Removed 💔"
 
-            name: "اسم المحجز:",
+}
 
-            namePlaceholder: "أدخل اسمك الكامل",
+};
 
-            date: "تاريخ الزيارة:",
+const places=[
 
-            btnConfirm: "تأكيد الحجز",
+{n_ar:"مطعم عمان",n_en:"Amman Restaurant",loc_ar:"عمان",loc_en:"Amman",cat:"restaurant"},
 
-            btnBack: "العودة",
+{n_ar:"مقهى جميل",n_en:"Nice Cafe",loc_ar:"العبدلي",loc_en:"Abdali",cat:"cafe"}
 
-            noBooking: "هذا المكان لا يحتاج حجز مسبق.",
+];
 
-            alert: "تم تأكيد الحجز في "
+let favorites=JSON.parse(localStorage.getItem("favorites"))||[];
 
-        },
+function toast(msg){
 
-        en: {
+const t=document.getElementById("toast");
 
-            title: "Place Details",
+t.textContent=msg;
 
-            loc: "📍 Location:",
+t.style.display="block";
 
-            cost: "💰 Expected Cost:",
+setTimeout(()=>t.style.display="none",2000);
 
-            name: "Full Name:",
+}
 
-            namePlaceholder: "Enter your full name",
+function render(){
 
-            date: "Visit Date:",
+const tr=t[lang];
 
-            btnConfirm: "Confirm Booking",
+document.title=tr.title;
 
-            btnBack: "Back",
+document.getElementById("title").textContent=tr.title;
 
-            noBooking: "No booking required.",
+document.getElementById("search").placeholder=tr.search;
 
-            alert: "Booking confirmed at "
+document.getElementById("filter").innerHTML=`<option>${tr.filter}</option>`;
 
-        }
+document.getElementById("lang-btn").textContent=tr.lang;
 
-    };
+document.getElementById("html-tag").dir=lang==="ar"?"rtl":"ltr";
 
-    function init() {
+showPlaces(places);
 
-        if (!data) {
+}
 
-            alert("لا يوجد بيانات، سيتم إعادتك للرئيسية");
+function showPlaces(list){
 
-            window.location.href = "index.html";
+const container=document.getElementById("places");
 
-            return;
+container.innerHTML="";
 
-        }
+list.forEach((p,i)=>{
 
-        const lang = data.currentLang || 'ar';
+const fav=favorites.includes(p.n_en);
 
-        const t = translations[lang];
+const div=document.createElement("div");
 
-        document.getElementById('html-tag').dir = lang === 'ar' ? 'rtl' : 'ltr';
+div.className="place";
 
-        document.getElementById('html-tag').lang = lang;
+div.innerHTML=`
 
-        document.getElementById('place-name').textContent =
+<div class="heart" onclick="toggleFav(event,${i})">
 
-            lang === 'ar' ? (data.n_ar || "غير معروف") : (data.n_en || "Unknown");
+${fav?"❤️":"🤍"}
 
-        document.getElementById('place-loc').textContent =
+</div>
 
-            lang === 'ar' ? (data.loc_ar || "غير محدد") : (data.loc_en || "Not specified");
+<div>${lang==="ar"?p.n_ar:p.n_en}</div>
 
-        document.getElementById('place-cost').textContent =
+<div class="rating">⭐⭐⭐⭐☆</div>
 
-            (data.totalCost || 0) + " JOD";
+`;
 
-        document.getElementById('page-title').textContent = t.title;
+div.onclick=()=>openPlace(p);
 
-        document.getElementById('lbl-loc').textContent = t.loc;
+container.appendChild(div);
 
-        document.getElementById('lbl-total-cost').textContent = t.cost;
+});
 
-        document.getElementById('lbl-name').textContent = t.name;
+}
 
-        document.getElementById('user-name').placeholder = t.namePlaceholder;
+function toggleFav(e,i){
 
-        document.getElementById('lbl-date').textContent = t.date;
+e.stopPropagation();
 
-        document.getElementById('btn-confirm').textContent = t.btnConfirm;
+const place=places[i];
 
-        document.getElementById('btn-back').textContent = t.btnBack;
+const exists=favorites.includes(place.n_en);
 
-        document.getElementById('no-booking-area').textContent = t.noBooking;
+if(exists){
 
-        if (bookableCategories.includes(data.cat)) {
+favorites=favorites.filter(f=>f!==place.n_en);
 
-            document.getElementById('booking-area').style.display = 'block';
+toast(t[lang].favRemove);
 
-        } else {
+}else{
 
-            document.getElementById('no-booking-area').style.display = 'block';
+favorites.push(place.n_en);
 
-        }
+toast(t[lang].favAdd);
 
-    }
+}
 
-    function confirmBooking() {
+localStorage.setItem("favorites",JSON.stringify(favorites));
 
-        const lang = data.currentLang || 'ar';
+render();
 
-        const user = document.getElementById('user-name').value.trim();
+}
 
-        const date = document.getElementById('visit-date').value;
+document.getElementById("search").addEventListener("input",function(){
 
-        const t = translations[lang];
+const val=this.value.toLowerCase();
 
-        if (!user || !date) {
+const filtered=places.filter(p=>
 
-            alert(lang === 'ar'
+(p.n_ar+p.n_en).toLowerCase().includes(val)
 
-                ? "يرجى إدخال الاسم والتاريخ"
+);
 
-                : "Please fill all fields");
+showPlaces(filtered);
 
-            return;
+});
 
-        }
+function openPlace(p){
 
-        alert(t.alert + (lang === 'ar' ? data.n_ar : data.n_en));
+const data={
 
-        // تنظيف البيانات
+currentLang:lang,
 
-        localStorage.removeItem('selectedPlace');
+...p,
 
-        window.location.href = "index.html";
-        }
+totalCost:25,
 
-    init();
+cat:p.cat
+
+};
+
+localStorage.setItem("selectedPlace",JSON.stringify(data));
+
+window.location.href="details.html";
+
+}
+
+function toggleLang(){
+
+lang=lang==="ar"?"en":"ar";
+
+render();
+
+}
+
+render();
 
 </script>
 
