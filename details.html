@@ -1,303 +1,45 @@
 <!DOCTYPE html>
-
-<html lang="ar" id="html-tag">
-
+<html lang="en">
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title></title>
-
-<style>
-
-body{font-family:Arial;margin:0;background:#f2f2f2;padding:20px;text-align:center;}
-
-.card{
-
-background:white;
-
-padding:20px;
-
-border-radius:15px;
-
-max-width:500px;
-
-margin:auto;
-
-}
-
-input{
-
-width:90%;
-
-padding:10px;
-
-margin:10px 0;
-
-border-radius:8px;
-
-border:1px solid #ccc;
-
-}
-
-button{
-
-width:95%;
-
-padding:12px;
-
-border:none;
-
-border-radius:10px;
-
-margin-top:10px;
-
-cursor:pointer;
-
-}
-
-.btn{background:#667eea;color:white;}
-
-.back{background:#ddd;}
-
-.star{
-
-font-size:25px;
-
-cursor:pointer;
-
-color:#ccc;
-
-}
-
-.star.active{color:gold;}
-
-.toast{
-
-position:fixed;
-
-bottom:20px;
-
-left:50%;
-
-transform:translateX(-50%);
-
-background:#333;
-
-color:white;
-
-padding:10px 20px;
-
-border-radius:10px;
-
-display:none;
-
-}
-
-</style>
-
+    <meta charset="UTF-8">
+    <title>Jordan Spots | Details</title>
+    <style>
+        /* التنسيق البسيط الذي استخدمناه سابقاً */
+        body { font-family: sans-serif; display: flex; justify-content: center; background: #f4f4f4; padding: 20px; }
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+        .btn-book { background: linear-gradient(to right, #667eea, #764ba2); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; cursor: pointer; margin-top: 10px; }
+        .no-booking { background: #fff3e0; color: #ef6c00; padding: 10px; border-radius: 8px; margin-top: 10px; }
+    </style>
 </head>
-
 <body>
-
-<div class="card">
-
-<h2 id="name"></h2>
-
-<p><b id="loc-label"></b> <span id="loc"></span></p>
-
-<p><b id="cost-label"></b> <span id="cost"></span></p>
-
-<div id="rating">
-
-<span class="star" onclick="rate(1)">★</span>
-
-<span class="star" onclick="rate(2)">★</span>
-
-<span class="star" onclick="rate(3)">★</span>
-
-<span class="star" onclick="rate(4)">★</span>
-
-<span class="star" onclick="rate(5)">★</span>
-
-</div>
-
-<br>
-
-<div id="booking">
-
-<input id="user">
-
-<input id="date" type="date">
-
-<button class="btn" onclick="book()" id="book-btn"></button>
-
-</div>
-
-<button class="back" onclick="back()" id="back-btn"></button>
-
-</div>
-
-<div id="toast" class="toast"></div>
-
-<script>
-
-let data=null;
-
-try{
-
-const raw=localStorage.getItem("selectedPlace");
-
-data=raw?JSON.parse(raw):null;
-
-}catch(e){
-
-window.location.href="index.html";
-
-}
-
-const t={
-
-ar:{
-
-loc:"📍 الموقع:",
-
-cost:"💰 السعر:",
-
-book:"تأكيد الحجز",
-
-back:"رجوع",
-
-alert:"تم الحجز في ",
-
-rating:"التقييم: "
-
-},
-
-en:{
-
-loc:"📍 Location:",
-
-cost:"💰 Cost:",
-
-book:"Confirm Booking",
-
-back:"Back",
-
-alert:"Booked at ",
-
-rating:"Rating: "
-
-}
-
-};
-
-function toast(msg){
-
-const t=document.getElementById("toast");
-
-t.textContent=msg;
-
-t.style.display="block";
-
-setTimeout(()=>t.style.display="none",2000);
-
-}
-
-function init(){
-
-if(!data){
-
-window.location.href="index.html";
-
-return;
-
-}
-
-const lang=data.currentLang||"ar";
-
-const tr=t[lang];
-
-document.getElementById("html-tag").dir=lang==="ar"?"rtl":"ltr";
-
-document.title=lang==="ar"?data.n_ar:data.n_en;
-
-document.getElementById("name").textContent=
-
-lang==="ar"?data.n_ar:data.n_en;
-
-document.getElementById("loc").textContent=
-
-lang==="ar"?data.loc_ar:data.loc_en;
-
-document.getElementById("cost").textContent=data.totalCost+" JOD";
-
-document.getElementById("loc-label").textContent=tr.loc;
-
-document.getElementById("cost-label").textContent=tr.cost;
-
-document.getElementById("book-btn").textContent=tr.book;
-
-document.getElementById("back-btn").textContent=tr.back;
-
-document.getElementById("user").placeholder=lang==="ar"?"اسمك":"Your name";
-
-}
-
-function rate(n){
-
-const stars=document.querySelectorAll(".star");
-
-stars.forEach((s,i)=>{
-
-s.classList.toggle("active",i<n);
-
-});
-
-const lang=data.currentLang||"ar";
-
-toast(t[lang].rating+n);
-
-}
-
-function book(){
-
-const lang=data.currentLang||"ar";
-
-const tr=t[lang];
-
-const user=document.getElementById("user").value;
-
-const date=document.getElementById("date").value;
-
-if(!user||!date){
-
-alert("Fill all fields");
-
-return;
-
-}
-
-toast(tr.alert+(lang==="ar"?data.n_ar:data.n_en));
-
-localStorage.removeItem("selectedPlace");
-
-window.location.href="index.html";
-
-}
-
-function back(){
-
-window.location.href="index.html";
-
-}
-
-init();
-
-</script>
-
+    <div class="card">
+        <h2 id="name">Loading...</h2>
+        <p id="location"></p>
+        <p id="price"></p>
+        <hr>
+        <!-- هذا الجزء سيظهر دائماً لأننا سنلغي شرط المنع -->
+        <div id="booking-section">
+            <input type="text" id="user-name" placeholder="Enter your name" style="width:90%; padding:10px; margin-bottom:10px;">
+            <input type="date" id="visit-date" style="width:90%; padding:10px;">
+            <button class="btn-book" onclick="confirm()">Confirm Booking</button>
+        </div>
+        <a href="index.html" style="display:block; margin-top:15px; color:#666;">Back to Home</a>
+    </div>
+
+    <script>
+        const data = JSON.parse(localStorage.getItem('selectedPlace'));
+        if (data) {
+            document.getElementById('name').innerText = data.n_en;
+            document.getElementById('location').innerText = "📍 " + data.loc_en;
+            document.getElementById('price').innerText = "💰 " + data.totalCost + " JOD";
+        }
+
+        function confirm() {
+            const user = document.getElementById('user-name').value;
+            if(!user) { alert("Please enter your name"); return; }
+            alert("Booking Confirmed for " + user + " at " + data.n_en);
+            window.location.href = "index.html";
+        }
+    </script>
 </body>
-
 </html>
