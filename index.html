@@ -3,110 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jordan Spots | استكشف الأردن</title>
+    <title>Jordan Spots | safa/deemah</title>
     <style>
-        :root { --primary: #667eea; --secondary: #764ba2; --bg: #f8f9fa; }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); color: #333; }
-        header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 20px; text-align: center; position: sticky; top: 0; z-index: 1000; }
+        :root { --primary: #667eea; --secondary: #764ba2; --bg: #f8f9fa; --text: #2d3436; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--bg); color: var(--text); transition: 0.3s; }
+        header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; text-align: center; padding: 50px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         
-        /* تنسيق الفلتر */
-        .filter-container { background: white; padding: 15px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .filter-btn { background: #eee; border: none; padding: 10px 20px; margin: 5px; border-radius: 20px; cursor: pointer; transition: 0.3s; font-weight: bold; color: #555; }
-        .filter-btn.active { background: var(--primary); color: white; }
+        .lang-switch { position: absolute; top: 20px; left: 20px; background: rgba(255,255,255,0.2); color: white; border: 1.5px solid white; padding: 8px 20px; border-radius: 25px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .lang-switch:hover { background: white; color: var(--primary); }
+        [dir="ltr"] .lang-switch { left: auto; right: 20px; }
 
-        .container { max-width: 1100px; margin: 20px auto; padding: 0 15px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: 0.3s; cursor: pointer; text-align: center; padding-bottom: 20px; }
-        .card:hover { transform: translateY(-5px); }
-        .card-body { padding: 15px; }
-        .lang-btn { position: absolute; top: 20px; left: 20px; background: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; color: var(--primary); font-weight: bold; }
-        .btn-view { background: var(--primary); color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; }
+        .container { max-width: 1100px; margin: -30px auto 50px; padding: 0 20px; }
+        
+        /* Filters Section */
+        .filter-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+        .filter-group { display: flex; flex-direction: column; gap: 10px; }
+        label { font-weight: 600; font-size: 0.9em; color: #636e72; }
+        select, input { padding: 14px; border: 2px solid #edf2f7; border-radius: 12px; font-size: 1em; outline: none; transition: 0.3s; }
+        select:focus, input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1); }
+
+        /* Places Grid */
+        #places-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; margin-top: 40px; }
+        .place-card { background: white; border-radius: 20px; padding: 25px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #f0f0f0; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+        .place-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); border-color: var(--primary); }
+        
+        .booking-badge { align-self: flex-start; font-size: 0.75em; padding: 4px 12px; border-radius: 8px; background: #f1f2f6; color: #57606f; margin-bottom: 15px; font-weight: bold; }
+        .place-name { font-size: 1.3em; font-weight: 800; color: #2d3436; margin-bottom: 10px; }
+        .details-row { font-size: 0.9em; color: #636e72; line-height: 1.6; }
+        
+        .status-msg { margin-top: auto; padding: 12px; border-radius: 12px; font-size: 0.85em; text-align: center; font-weight: bold; margin-top: 20px; }
+        .msg-ok { background: #e8faf0; color: #20bf6b; }
+        .msg-warn { background: #fff5f5; color: #eb4d4b; }
+
+        .empty-state { grid-column: 1 / -1; text-align: center; padding: 100px 20px; color: #b2bec3; }
     </style>
 </head>
 <body>
 
 <header>
-    <button class="lang-btn" onclick="toggleLang()" id="lang-btn">English</button>
-    <h1 id="main-title">استكشف الأردن</h1>
+    <button class="lang-switch" onclick="toggleLanguage()" id="lang-btn">English</button>
+    <h1 id="main-title">Jordan Spots</h1>
+    <p id="sub-title"></p>
 </header>
 
-<!-- قسم الفلتر -->
-<div class="filter-container" id="filter-area">
-    <button class="filter-btn active" onclick="filterPlaces('all')" id="btn-all">الكل</button>
-    <button class="filter-btn" onclick="filterPlaces('parks')" id="btn-parks">حدائق</button>
-    <button class="filter-btn" onclick="filterPlaces('mall')" id="btn-mall">مولات</button>
-    <button class="filter-btn" onclick="filterPlaces('food')" id="btn-food">مطاعم وكافيهات</button>
-</div>
-
 <div class="container">
-    <div class="grid" id="places-grid"></div>
+    <div class="filter-card">
+        <div class="filter-group">
+            <label id="lbl-cat"></label>
+            <select id="category" onchange="renderPlaces()"></select>
+        </div>
+        <div class="filter-group">
+            <label id="lbl-budget"></label>
+            <input type="number" id="budget" oninput="renderPlaces()">
+        </div>
+        <div class="filter-group">
+            <label id="lbl-people"></label>
+            <input type="number" id="people" value="1" min="1" oninput="renderPlaces()">
+        </div>
+    </div>
+
+    <div id="places-container"></div>
 </div>
 
 <script>
-    // البيانات الشاملة مع التصنيفات (Category)
-    const places = [
-        { id: 1, n_ar: "حدائق الحسين", n_en: "Al Hussein Parks", loc_ar: "عمان", loc_en: "Amman", totalCost: 0, cat: "parks", canBook: false },
-        { id: 2, n_ar: "سيتي مول", n_en: "City Mall", loc_ar: "عمان", loc_en: "Amman", totalCost: 0, cat: "mall", canBook: false },
-        { id: 3, n_ar: "مطعم زوادة", n_en: "Zwadeh", loc_ar: "الفحيص", loc_en: "Fuheis", totalCost: 20, cat: "food", canBook: true },
-        { id: 4, n_ar: "كافيه إطلالة", n_en: "Citadel View", loc_ar: "جبل القلعة", loc_en: "Citadel", totalCost: 15, cat: "food", canBook: true }
-    ];
+// --- 1. إعدادات الترجمة ---
+const translations = {
+    ar: { 
+        title: "اكتشف الأردن 🇯🇴", subTitle: "دليلك الشامل لـ 110 موقع سياحي وتعليمي",
+        lblCat: "الفئة:", lblBudget: "ميزانيتك الكلية (JD):", lblPeople: "عدد الأشخاص:",
+        placeholderBudget: "مثال: 50", empty: "الرجاء اختيار فئة للبدء في الاستكشاف...",
+        warnBudget: "⚠️ الميزانية غير كافية، تحتاج لـ: ", ok: "✅ ميزانيتك كافية لهذا الخيار.",
+        perPerson: "للشخص", bookingYes: "متاح للحجز", bookingNo: "دخول عام",
+        categories: { "": "-- اختر الفئة --", university: "🎓 الجامعات", restaurant: "🍽️ المطاعم", mall: "🛍️ المولات", cafe: "☕ الكافيهات", heritage: "🏛️ معالم أثرية", pharmacy: "💊 الصيدليات" }
+    },
+    en: { 
+        title: "Explore Jordan 🇯🇴", subTitle: "Your guide to 110 tourist and educational spots",
+        lblCat: "Category:", lblBudget: "Total Budget (JD):", lblPeople: "Number of People:",
+        placeholderBudget: "Example: 50", empty: "Please select a category to start exploring...",
+        warnBudget: "⚠️ Budget low, you need: ", ok: "✅ Budget is sufficient.",
+        perPerson: "per person", bookingYes: "Bookable", bookingNo: "Public Access",
+        categories: { "": "-- Select Category --", university: "🎓 Universities", restaurant: "🍽️ Restaurants", mall: "🛍️ Malls", cafe: "☕ Cafes", heritage: "🏛️ Heritage", pharmacy: "💊 Pharmacies" }
+    }
+};
 
-    let currentLang = 'ar';
-    let currentFilter = 'all';
+// --- 2. مصفوفة البيانات (عينة توضح الـ 110 مكان) ---
+const places = [
+    {n_ar:"الجامعة الأردنية", n_en:"University of Jordan", cat:"university", cost:0, loc_ar:"الجبيهة", loc_en:"Jubeiha", rate:4.5, canBook: true},
+    {n_ar:"مطعم فخر الدين", n_en:"Fakhreldin", cat:"restaurant", cost:25, loc_ar:"جبل عمان", loc_en:"Jabal Amman", rate:4.8, canBook: true},
+    {n_ar:"سيتي مول", n_en:"City Mall", cat:"mall", cost:0, loc_ar:"شارع مكة", loc_en:"Mecca St", rate:4.4, canBook: false},
+    {n_ar:"صيدلية فارمسي ون", n_en:"Pharmacy One", cat:"pharmacy", cost:0, loc_ar:"مواقع متعددة", loc_en:"Various Locations", rate:4.6, canBook: false},
+    {n_ar:"القلعة", n_en:"Amman Citadel", cat:"heritage", cost:3, loc_ar:"جبل القلعة", loc_en:"Citadel Hill", rate:4.7, canBook: false},
+    // ملاحظة: يمكنك إضافة الـ 110 مكان هنا بنفس هذا التنسيق
+];
 
-    const translations = {
-        ar: { title: "استكشف الأردن", all: "الكل", parks: "حدائق", mall: "مولات", food: "مطاعم", view: "عرض التفاصيل", lang: "English" },
-        en: { title: "Explore Jordan", all: "All", parks: "Parks", mall: "Malls", food: "Restaurants", view: "View Details", lang: "عربي" }
-    };
+let currentLang = 'ar';
 
-    function render() {
-        const grid = document.getElementById('places-grid');
-        grid.innerHTML = '';
-        const t = translations[currentLang];
+function toggleLanguage() {
+    currentLang = currentLang === 'ar' ? 'en' : 'ar';
+    updateUI();
+}
 
-        const filtered = currentFilter === 'all' ? places : places.filter(p => p.cat === currentFilter);
+function updateUI() {
+    const t = translations[currentLang];
+    document.getElementById('html-tag').dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+    document.getElementById('lang-btn').textContent = currentLang === 'ar' ? 'English' : 'عربي';
+    document.getElementById('main-title').textContent = t.title;
+    document.getElementById('sub-title').textContent = t.subTitle;
+    document.getElementById('lbl-cat').textContent = t.lblCat;
+    document.getElementById('lbl-budget').textContent = t.lblBudget;
+    document.getElementById('lbl-people').textContent = t.lblPeople;
+    document.getElementById('budget').placeholder = t.placeholderBudget;
+    
+    // تحديث خيارات الفئات
+    const catSelect = document.getElementById('category');
+    const currentVal = catSelect.value;
+    catSelect.innerHTML = "";
+    for (let key in t.categories) {
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = t.categories[key];
+        catSelect.appendChild(opt);
+    }
+    catSelect.value = currentVal;
+    renderPlaces();
+}
 
-        filtered.forEach(p => {
-            const name = currentLang === 'ar' ? p.n_ar : p.n_en;
-            grid.innerHTML += `
-                <div class="card" onclick="goToDetails(${p.id})">
-                    <div class="card-body">
-                        <h3>${name}</h3>
-                        <p>📍 ${currentLang === 'ar' ? p.loc_ar : p.loc_en}</p>
-                        <span class="btn-view">${t.view}</span>
-                    </div>
-                </div>`;
-        });
+function renderPlaces() {
+    const cat = document.getElementById('category').value;
+    const bud = parseFloat(document.getElementById('budget').value) || Infinity;
+    const peo = parseInt(document.getElementById('people').value) || 1;
+    const container = document.getElementById('places-container');
+    const t = translations[currentLang];
+
+    if (!cat) {
+        container.innerHTML = `<div class="empty-state"><h3>${t.empty}</h3></div>`;
+        return;
     }
 
-    function filterPlaces(category) {
-        currentFilter = category;
-        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-        // إضافة الكلاس النشط للزر المختار
-        event.target.classList.add('active');
-        render();
-    }
+    const filtered = places.filter(p => p.cat === cat);
+    container.innerHTML = "";
 
-    function toggleLang() {
-        currentLang = currentLang === 'ar' ? 'en' : 'ar';
-        const t = translations[currentLang];
-        document.getElementById('html-tag').dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-        document.getElementById('main-title').textContent = t.title;
-        document.getElementById('lang-btn').textContent = t.lang;
-        document.getElementById('btn-all').textContent = t.all;
-        document.getElementById('btn-parks').textContent = t.parks;
-        document.getElementById('btn-mall').textContent = t.mall;
-        document.getElementById('btn-food').textContent = t.food;
-        render();
-    }
+    filtered.forEach(p => {
+        const totalCost = p.cost * peo;
+        const isEnough = bud >= totalCost;
 
-    function goToDetails(id) {
-        const place = places.find(p => p.id === id);
-        localStorage.setItem('selectedPlace', JSON.stringify({ ...place, currentLang }));
-        window.location.href = "details.html";
-    }
+        const card = document.createElement('div');
+        card.className = "place-card";
+        card.innerHTML = `
+            <div class="booking-badge">${p.canBook ? t.bookingYes : t.bookingNo}</div>
+            <div class="place-name">${currentLang === 'ar' ? p.n_ar : p.n_en}</div>
+            <div class="details-row">
+                📍 ${currentLang === 'ar' ? p.loc_ar : p.loc_en} <br>
+                ⭐ ${p.rate} | 💰 ${p.cost} JD ${t.perPerson}
+            </div>
+            <div class="status-msg ${isEnough ? 'msg-ok' : 'msg-warn'}">
+                ${isEnough ? t.ok : t.warnBudget + totalCost + ' JD'}
+            </div>
+        `;
+        
+        card.onclick = () => {
+            // حفظ البيانات لإرسالها لصفحة الديتيلز
+            const selectedData = { ...p, currentLang, userBudget: bud, userPeople: peo, totalNeeded: totalCost };
+            localStorage.setItem('selectedPlace', JSON.stringify(selectedData));
+            window.location.href = "details.html";
+        };
+        
+        container.appendChild(card);
+    });
+}
 
-    render();
+// تشغيل الواجهة لأول مرة
+updateUI();
 </script>
+
 </body>
 </html>
