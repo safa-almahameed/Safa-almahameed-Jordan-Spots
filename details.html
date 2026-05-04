@@ -1,7 +1,75 @@
-if (data.canBook === true) {
-    document.getElementById('booking-area').style.display = 'block';
-    document.getElementById('no-booking-area').style.display = 'none';
-} else {
-    document.getElementById('booking-area').style.display = 'none';
-    document.getElementById('no-booking-area').style.display = 'block';
-}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>تفاصيل الموقع | safa/deemah</title>
+    <style>
+        :root { --primary: #667eea; --secondary: #764ba2; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f8f9fa; margin: 0; padding: 20px; text-align: center; }
+        .details-container { max-width: 600px; margin: 50px auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .booking-box { padding: 20px; border: 2px dashed var(--primary); border-radius: 15px; background: #f0f3ff; margin-top: 20px; }
+        .no-booking-box { padding: 20px; border: 2px solid #ddd; border-radius: 15px; background: #fff3cd; color: #856404; margin-top: 20px; }
+        button { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; padding: 12px 25px; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 15px; }
+        .edu-note { font-size: 0.8em; color: #999; margin-top: 20px; font-style: italic; }
+    </style>
+</head>
+<body>
+
+<div class="details-container">
+    <h1 id="place-name">اسم الموقع</h1>
+    <p id="place-info"></p>
+
+    <!-- منطقة الحجز (تظهر للجامعات والمطاعم وغيرها) -->
+    <div id="booking-area" class="booking-box" style="display:none;">
+        <h3 id="book-title">تأكيد الحجز</h3>
+        <p id="book-desc">هذا الموقع يتطلب حجزاً مسبقاً.</p>
+        <button onclick="confirmBooking()">تأكيد الحجز الآن</button>
+    </div>
+
+    <!-- منطقة الدخول العام (تظهر للمولات والمكتبات وغيرها) -->
+    <div id="no-booking-area" class="no-booking-box" style="display:none;">
+        <p id="no-book-desc">هذا الموقع متاح للدخول العام ولا يتطلب حجزاً مسبقاً.</p>
+    </div>
+
+    <button onclick="window.location.href='index.html'" style="background: #666; margin-top: 20px;">العودة للرئيسية</button>
+    
+    <p class="edu-note" id="edu-note"></p>
+</div>
+
+<script>
+    // استرجاع البيانات المخزنة من الصفحة الرئيسية
+    const rawData = localStorage.getItem('selectedPlace');
+    
+    if (rawData) {
+        const data = JSON.parse(rawData);
+        const isAr = data.currentLang === 'ar';
+
+        // تعبئة البيانات الأساسية
+        document.getElementById('place-name').textContent = isAr ? data.n_ar : data.n_en;
+        document.getElementById('place-info').textContent = `📍 ${isAr ? data.loc_ar : data.loc_en} | 💰 ${data.totalCost} JD`;
+        document.getElementById('edu-note').textContent = isAr ? "* هذا الموقع صُمم لأغراض التدريب والتعليم فقط" : "* This site is for training and educational purposes only";
+
+        // تطبيق الكود الخاص بكِ للتحكم في الأقسام
+        if (data.canBook === true) {
+            document.getElementById('booking-area').style.display = 'block';
+            document.getElementById('no-booking-area').style.display = 'none';
+        } else {
+            document.getElementById('booking-area').style.display = 'none';
+            document.getElementById('no-booking-area').style.display = 'block';
+        }
+
+        // ترجمة محتوى الأقسام بناءً على اللغة المختارة
+        if (!isAr) {
+            document.getElementById('book-title').textContent = "Confirm Booking";
+            document.getElementById('book-desc').textContent = "This location requires a pre-booking.";
+            document.getElementById('no-book-desc').textContent = "This location is open for public access and does not require a booking.";
+        }
+    }
+
+    function confirmBooking() {
+        alert(document.getElementById('html-tag')?.dir === 'ltr' ? "Booking Successful!" : "تم الحجز بنجاح!");
+    }
+</script>
+
+</body>
+</html>
