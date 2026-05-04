@@ -114,7 +114,6 @@ const places = [
     {n_ar:"أفينيو مول", n_en:"Avenue Mall", cat:"mall", cost:5, loc_ar:"الزرقاء", loc_en:"Zarqa", rate:4.1},
 
     // --- CAFES ---
-
     {n_ar:"كوستا كوفي", n_en:"Costa Coffee", cat:"cafe", cost:3, loc_ar:"عدة فروع", loc_en:"Branches", rate:4.1},
     {n_ar:"رومي كافيه", n_en:"Rumi Cafe", cat:"cafe", cost:4, loc_ar:"اللويبدة", loc_en:"Webdeh", rate:4.6},
     {n_ar:"بوكس آت كافيه", n_en:"Books@Cafe", cat:"cafe", cost:5, loc_ar:"جبل عمان", loc_en:"Jabal Amman", rate:4.5},
@@ -136,7 +135,7 @@ const places = [
     {n_ar:"حلويات حبيبة", n_en:"Habibah Sweets", cat:"restaurant", cost:2, loc_ar:"وسط البلد", loc_en:"Downtown", rate:4.7},
     {n_ar:"فلافل القدس", n_en:"AlQuds Falafel", cat:"restaurant", cost:1, loc_ar:"شارع الرينبو", loc_en:"Rainbow St", rate:4.6},
 
-    // --- HERITAGE (الآن مدمجة ببياناتك الجديدة) ---
+    // --- HERITAGE ---
     {n_ar:"جبل القلعة", n_en:"Amman Citadel", cat:"heritage", cost:2, loc_ar:"جبل القلعة", loc_en:"Citadel Hill", rate:4.5},
     {n_ar:"المدرج الروماني", n_en:"Roman Theater", cat:"heritage", cost:2, loc_ar:"وسط البلد", loc_en:"Downtown", rate:4.5},
     {n_ar:"معبد هرقل", n_en:"Temple of Hercules", cat:"heritage", cost:2, loc_ar:"القلعة", loc_en:"Citadel", rate:4.6},
@@ -237,6 +236,12 @@ function updateUI() {
 }
 
 function renderPlaces() {
+    // تحديد من يحتاج حجز تلقائياً بناءً على طلبك
+    places.forEach(p => {
+        const noBookingCats = ['mall', 'pharmacy', 'library', 'relax', 'ent', 'heritage'];
+        p.canBook = !noBookingCats.includes(p.cat);
+    });
+
     const cat = document.getElementById('category').value;
     const bud = parseFloat(document.getElementById('budget').value) || Infinity;
     const peo = parseInt(document.getElementById('people').value) || 1;
@@ -252,7 +257,6 @@ function renderPlaces() {
     places.filter(p => p.cat === cat).forEach(p => {
         const total = p.cost * peo;
         
-        // خاصية تحديد إذا كان المكان متاح للحجز أم لا
         const bookingStatus = p.canBook 
             ? `<span style="color: #2e7d32; font-weight:bold;">● ${currentLang === 'ar' ? 'متاح للحجز' : 'Available for Booking'}</span>`
             : `<span style="color: #666;">○ ${currentLang === 'ar' ? 'دخول عام' : 'Public Access'}</span>`;
@@ -278,7 +282,6 @@ function renderPlaces() {
     });
 }
 
-}
 updateUI();
 </script>
 </body>
