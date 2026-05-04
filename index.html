@@ -3,132 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jordan Spots | Discover Jordan</title>
+    <title>Jordan Spots | استكشف الأردن</title>
     <style>
         :root { --primary: #667eea; --secondary: #764ba2; --bg: #f8f9fa; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background: var(--bg); color: #333; transition: 0.3s; }
-        header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 25px; text-align: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .lang-btn { position: absolute; top: 25px; left: 20px; background: white; color: var(--primary); border: none; padding: 8px 18px; border-radius: 25px; cursor: pointer; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
-        .card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: 0.4s; border: 1px solid #eee; display: flex; flex-direction: column; }
-        .card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.12); }
-        .card-body { padding: 25px; text-align: center; flex-grow: 1; }
-        .card-title { font-size: 1.5em; color: var(--secondary); margin-bottom: 10px; }
-        .card-loc { color: #777; font-size: 0.95em; margin-bottom: 20px; min-height: 40px; }
-        .btn-view { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 12px 25px; border-radius: 12px; text-decoration: none; font-weight: bold; display: inline-block; width: 80%; transition: 0.3s; border: none; cursor: pointer; }
-        .btn-view:hover { opacity: 0.9; box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); color: #333; }
+        header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 20px; text-align: center; position: sticky; top: 0; z-index: 1000; }
+        
+        /* تنسيق الفلتر */
+        .filter-container { background: white; padding: 15px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .filter-btn { background: #eee; border: none; padding: 10px 20px; margin: 5px; border-radius: 20px; cursor: pointer; transition: 0.3s; font-weight: bold; color: #555; }
+        .filter-btn.active { background: var(--primary); color: white; }
+
+        .container { max-width: 1100px; margin: 20px auto; padding: 0 15px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: 0.3s; cursor: pointer; text-align: center; padding-bottom: 20px; }
+        .card:hover { transform: translateY(-5px); }
+        .card-body { padding: 15px; }
+        .lang-btn { position: absolute; top: 20px; left: 20px; background: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; color: var(--primary); font-weight: bold; }
+        .btn-view { background: var(--primary); color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <header>
     <button class="lang-btn" onclick="toggleLang()" id="lang-btn">English</button>
-    <h1 id="main-title">استكشف أجمل المواقع في الأردن</h1>
+    <h1 id="main-title">استكشف الأردن</h1>
 </header>
 
+<!-- قسم الفلتر -->
+<div class="filter-container" id="filter-area">
+    <button class="filter-btn active" onclick="filterPlaces('all')" id="btn-all">الكل</button>
+    <button class="filter-btn" onclick="filterPlaces('parks')" id="btn-parks">حدائق</button>
+    <button class="filter-btn" onclick="filterPlaces('mall')" id="btn-mall">مولات</button>
+    <button class="filter-btn" onclick="filterPlaces('food')" id="btn-food">مطاعم وكافيهات</button>
+</div>
+
 <div class="container">
-    <div class="grid" id="places-grid">
-        <!-- يتم توليد الأماكن هنا -->
-    </div>
+    <div class="grid" id="places-grid"></div>
 </div>
 
 <script>
-    // بيانات المواقع - إضافة فئة (canBook) للتحكم في ظهور صفحة الحجز
+    // البيانات الشاملة مع التصنيفات (Category)
     const places = [
-        {
-            id: 1,
-            n_ar: "حدائق الحسين", n_en: "Al Hussein Parks",
-            loc_ar: "عمان - المدينة الطبية", loc_en: "Amman - Medical City",
-            totalCost: 0,
-            canBook: false // مكان عام لا يحتاج حجز
-        },
-        {
-            id: 2,
-            n_ar: "سيتي مول", n_en: "City Mall",
-            loc_ar: "عمان - شارع المدينة الطبية", loc_en: "Amman - Medical City St",
-            totalCost: 0,
-            canBook: false // مول لا يحتاج حجز
-        },
-        {
-            id: 3,
-            n_ar: "مطعم زوادة", n_en: "Zwadeh Restaurant",
-            loc_ar: "الفحيص", loc_en: "Fuheis",
-            totalCost: 20,
-            canBook: true // مطعم يحتاج حجز
-        },
-        {
-            id: 4,
-            n_ar: "مقهى ومطعم إطلالة", n_en: "Panorama Cafe",
-            loc_ar: "وسط البلد - جبل القلعة", loc_en: "Downtown - Citadel Hill",
-            totalCost: 15,
-            canBook: true // مقهى يحتاج حجز
-        }
+        { id: 1, n_ar: "حدائق الحسين", n_en: "Al Hussein Parks", loc_ar: "عمان", loc_en: "Amman", totalCost: 0, cat: "parks", canBook: false },
+        { id: 2, n_ar: "سيتي مول", n_en: "City Mall", loc_ar: "عمان", loc_en: "Amman", totalCost: 0, cat: "mall", canBook: false },
+        { id: 3, n_ar: "مطعم زوادة", n_en: "Zwadeh", loc_ar: "الفحيص", loc_en: "Fuheis", totalCost: 20, cat: "food", canBook: true },
+        { id: 4, n_ar: "كافيه إطلالة", n_en: "Citadel View", loc_ar: "جبل القلعة", loc_en: "Citadel", totalCost: 15, cat: "food", canBook: true }
     ];
 
     let currentLang = 'ar';
+    let currentFilter = 'all';
 
     const translations = {
-        ar: {
-            title: "استكشف أجمل المواقع في الأردن",
-            btnView: "عرض التفاصيل",
-            langBtn: "English",
-            dir: "rtl"
-        },
-        en: {
-            title: "Explore the Best Spots in Jordan",
-            btnView: "View Details",
-            langBtn: "عربي",
-            dir: "ltr"
-        }
+        ar: { title: "استكشف الأردن", all: "الكل", parks: "حدائق", mall: "مولات", food: "مطاعم", view: "عرض التفاصيل", lang: "English" },
+        en: { title: "Explore Jordan", all: "All", parks: "Parks", mall: "Malls", food: "Restaurants", view: "View Details", lang: "عربي" }
     };
 
-    function renderPlaces() {
+    function render() {
         const grid = document.getElementById('places-grid');
         grid.innerHTML = '';
         const t = translations[currentLang];
 
-        places.forEach(place => {
-            const name = currentLang === 'ar' ? place.n_ar : place.n_en;
-            const loc = currentLang === 'ar' ? place.loc_ar : place.loc_en;
+        const filtered = currentFilter === 'all' ? places : places.filter(p => p.cat === currentFilter);
 
+        filtered.forEach(p => {
+            const name = currentLang === 'ar' ? p.n_ar : p.n_en;
             grid.innerHTML += `
-                <div class="card" onclick="goToDetails(${place.id})">
+                <div class="card" onclick="goToDetails(${p.id})">
                     <div class="card-body">
-                        <h3 class="card-title">${name}</h3>
-                        <p class="card-loc">📍 ${loc}</p>
-                        <button class="btn-view">${t.btnView}</button>
+                        <h3>${name}</h3>
+                        <p>📍 ${currentLang === 'ar' ? p.loc_ar : p.loc_en}</p>
+                        <span class="btn-view">${t.view}</span>
                     </div>
-                </div>
-            `;
+                </div>`;
         });
+    }
+
+    function filterPlaces(category) {
+        currentFilter = category;
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        // إضافة الكلاس النشط للزر المختار
+        event.target.classList.add('active');
+        render();
     }
 
     function toggleLang() {
         currentLang = currentLang === 'ar' ? 'en' : 'ar';
         const t = translations[currentLang];
-        
-        document.getElementById('html-tag').dir = t.dir;
-        document.getElementById('html-tag').lang = currentLang;
-        document.getElementById('lang-btn').textContent = t.langBtn;
+        document.getElementById('html-tag').dir = currentLang === 'ar' ? 'rtl' : 'ltr';
         document.getElementById('main-title').textContent = t.title;
-        
-        renderPlaces();
+        document.getElementById('lang-btn').textContent = t.lang;
+        document.getElementById('btn-all').textContent = t.all;
+        document.getElementById('btn-parks').textContent = t.parks;
+        document.getElementById('btn-mall').textContent = t.mall;
+        document.getElementById('btn-food').textContent = t.food;
+        render();
     }
 
     function goToDetails(id) {
-        const selected = places.find(p => p.id === id);
-        // تخزين البيانات كاملة بما في ذلك حالة الحجز canBook
-        localStorage.setItem('selectedPlace', JSON.stringify({
-            ...selected,
-            currentLang: currentLang
-        }));
+        const place = places.find(p => p.id === id);
+        localStorage.setItem('selectedPlace', JSON.stringify({ ...place, currentLang }));
         window.location.href = "details.html";
     }
 
-    // التشغيل عند تحميل الصفحة
-    renderPlaces();
+    render();
 </script>
-
 </body>
 </html>
