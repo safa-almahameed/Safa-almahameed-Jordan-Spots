@@ -1,45 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Jordan Spots | Details</title>
-    <style>
-        /* التنسيق البسيط الذي استخدمناه سابقاً */
-        body { font-family: sans-serif; display: flex; justify-content: center; background: #f4f4f4; padding: 20px; }
-        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
-        .btn-book { background: linear-gradient(to right, #667eea, #764ba2); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; cursor: pointer; margin-top: 10px; }
-        .no-booking { background: #fff3e0; color: #ef6c00; padding: 10px; border-radius: 8px; margin-top: 10px; }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <h2 id="name">Loading...</h2>
-        <p id="location"></p>
-        <p id="price"></p>
-        <hr>
-        <!-- هذا الجزء سيظهر دائماً لأننا سنلغي شرط المنع -->
-        <div id="booking-section">
-            <input type="text" id="user-name" placeholder="Enter your name" style="width:90%; padding:10px; margin-bottom:10px;">
-            <input type="date" id="visit-date" style="width:90%; padding:10px;">
-            <button class="btn-book" onclick="confirm()">Confirm Booking</button>
-        </div>
-        <a href="index.html" style="display:block; margin-top:15px; color:#666;">Back to Home</a>
-    </div>
-
-    <script>
-        const data = JSON.parse(localStorage.getItem('selectedPlace'));
-        if (data) {
-            document.getElementById('name').innerText = data.n_en;
-            document.getElementById('location').innerText = "📍 " + data.loc_en;
-            document.getElementById('price').innerText = "💰 " + data.totalCost + " JOD";
-        }
-
-        function confirm() {
-            const user = document.getElementById('user-name').value;
-            if(!user) { alert("Please enter your name"); return; }
-            alert("Booking Confirmed for " + user + " at " + data.n_en);
-            window.location.href = "index.html";
-        }
-    </script>
-</body>
-</html>
+if (data.canBook === true) {
+    document.getElementById('booking-area').style.display = 'block';
+    document.getElementById('no-booking-area').style.display = 'none';
+} else {
+    document.getElementById('booking-area').style.display = 'none';
+    document.getElementById('no-booking-area').style.display = 'block';
+}
