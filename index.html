@@ -243,14 +243,24 @@ function renderPlaces() {
     const con = document.getElementById('places-container');
     const t = translations[currentLang];
 
-    if (!cat) { con.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:50px; color:#999;"><h3>${t.empty}</h3></div>`; return; }
+    if (!cat) { 
+        con.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:50px; color:#999;"><h3>${t.empty}</h3></div>`; 
+        return; 
+    }
     con.innerHTML = "";
     
     places.filter(p => p.cat === cat).forEach(p => {
         const total = p.cost * peo;
+        
+        // خاصية تحديد إذا كان المكان متاح للحجز أم لا
+        const bookingStatus = p.canBook 
+            ? `<span style="color: #2e7d32; font-weight:bold;">● ${currentLang === 'ar' ? 'متاح للحجز' : 'Available for Booking'}</span>`
+            : `<span style="color: #666;">○ ${currentLang === 'ar' ? 'دخول عام' : 'Public Access'}</span>`;
+
         const card = document.createElement('div');
         card.className = "place-card";
         card.innerHTML = `
+            <div style="margin-bottom: 10px; font-size: 0.8em;">${bookingStatus}</div>
             <div class="place-name">${currentLang === 'ar' ? p.n_ar : p.n_en}</div>
             <div class="details-row">
                 📍 ${currentLang === 'ar' ? p.loc_ar : p.loc_en} | ⭐ ${p.rate} <br>
@@ -266,6 +276,8 @@ function renderPlaces() {
         };
         con.appendChild(card);
     });
+}
+
 }
 updateUI();
 </script>
