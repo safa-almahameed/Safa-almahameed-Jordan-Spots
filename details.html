@@ -30,55 +30,53 @@
     </style>
 </head>
 <body>
+    <div class="details-container">
+        <h1 id="place-name"></h1>
+        <div id="place-info"></div>
 
-<div class="details-container">
-    <h1 id="place-name">Costa Coffee</h1>
-    <div id="place-info">Branches | 💰 3 JD 📍</div>
-
-    <!-- منطقة الحجز - ستظهر فيها الخانات التي طلبتِها -->
-    <div id="booking-area" style="display: none;">
-        <div class="booking-box">
-            <h3 id="book-header" style="margin-top:0;">Confirm Booking</h3>
-            <p id="book-desc" style="font-size: 0.9em; color: #555;"></p>
-            
-            <label id="lbl-name"></label>
-            <input type="text" id="user-name">
-            
-            <label id="lbl-date"></label>
-            <input type="date" id="book-date">
-            
-            <span class="warning-text" id="warning-msg"></span>
-            
-            <button onclick="confirmBooking()" id="confirm-btn">تأكيد الحجز الآن</button>
+        <!-- هاد الجزء اللي بتستبدليه بس -->
+        <div id="booking-area" style="display: none;">
+            <div class="booking-box">
+                <h3 id="book-header">Confirm Booking</h3>
+                
+                <label id="lbl-name"></label>
+                <input type="text" id="user-name">
+                
+                <label id="lbl-date"></label>
+                <input type="date" id="book-date">
+                
+                <span class="warning-text" id="warning-msg"></span>
+                
+                <button onclick="confirmBooking()" id="confirm-btn"></button>
+            </div>
         </div>
+
+        <div id="no-booking-area" style="display: none;">
+            <div class="no-booking-box" id="no-book-desc"></div>
+        </div>
+
+        <button onclick="window.location.href='index.html'" class="back-btn" id="back-home-btn"></button>
     </div>
 
-    <!-- منطقة الدخول العام -->
-    <div id="no-booking-area" style="display: none;">
-        <div class="no-booking-box" id="no-book-desc"></div>
-    </div>
-
-    <!-- زر العودة للرئيسية -->
-    <button onclick="window.location.href='index.html'" id="back-home-btn">العودة للرئيسية</button>
-    
-    <span class="edu-tag">* This site is for training and educational purposes only</span>
-</div>
 
 <script>
+    // استرجاع البيانات التي تم حفظها عند الضغط على المكان في الصفحة الرئيسية
     const rawData = localStorage.getItem('selectedPlace');
     
     if (rawData) {
         const data = JSON.parse(rawData);
         const isAr = data.currentLang === 'ar';
+        
+        // تحديد اتجاه الصفحة بناءً على اللغة (يمين لليسار للعربي)
         document.getElementById('html-tag').dir = isAr ? 'rtl' : 'ltr';
 
-        // تعبئة البيانات
+        // تعبئة بيانات اسم المكان والمعلومات الأساسية
         document.getElementById('place-name').textContent = isAr ? data.n_ar : data.n_en;
         document.getElementById('place-info').innerHTML = `
             ${isAr ? data.loc_ar : data.loc_en} | 💰 ${data.totalCost} JD 📍
         `;
 
-        // منطق ظهور الأجزاء
+        // منطق التحكم في ظهور منطقة الحجز أو الدخول العام
         if (data.canBook === true) {
             document.getElementById('booking-area').style.display = 'block';
             document.getElementById('no-booking-area').style.display = 'none';
@@ -87,43 +85,48 @@
             document.getElementById('no-booking-area').style.display = 'block';
         }
 
-        // الترجمة الشاملة لجميع العناصر والأزرار
+        // نظام الترجمة الشامل للأزرار والخانات والرسائل
         if (isAr) {
             document.getElementById('book-header').textContent = "تأكيد الحجز";
-            document.getElementById('book-desc').textContent = "هذا الموقع يتطلب حجزاً مسبقاً.";
             document.getElementById('lbl-name').textContent = "الاسم الكامل:";
-            document.getElementById('user-name').placeholder = "اكتب اسمك هنا...";
+            document.getElementById('user-name').placeholder = "أدخل اسمك هنا...";
             document.getElementById('lbl-date').textContent = "تاريخ الزيارة:";
-            document.getElementById('warning-msg').textContent = "⚠️ ملاحظة: في حال عدم الحضور في الموعد سيتم إلغاء الحجز تلقائياً.";
+            document.getElementById('warning-msg').textContent = "⚠️ لو ما اجيت بالموعد المحدد لحجزك رح يلتغي الحجز.";
             document.getElementById('confirm-btn').textContent = "تأكيد الحجز الآن";
             document.getElementById('no-book-desc').textContent = "هذا الموقع متاح للدخول العام ولا يتطلب حجزاً مسبقاً.";
             document.getElementById('back-home-btn').textContent = "العودة للرئيسية";
         } else {
             document.getElementById('book-header').textContent = "Confirm Booking";
-            document.getElementById('book-desc').textContent = "This location requires a pre-booking.";
             document.getElementById('lbl-name').textContent = "Full Name:";
             document.getElementById('user-name').placeholder = "Enter your name...";
             document.getElementById('lbl-date').textContent = "Visit Date:";
-            document.getElementById('warning-msg').textContent = "⚠️ Note: Your booking will be cancelled if you don't arrive on time.";
+            document.getElementById('warning-msg').textContent = "⚠️ If you don't show up on time, your booking will be cancelled.";
             document.getElementById('confirm-btn').textContent = "Confirm Booking Now";
             document.getElementById('no-book-desc').textContent = "This site is open for public access and no booking is required.";
             document.getElementById('back-home-btn').textContent = "Back to Home";
         }
     }
 
+    // وظيفة الضغط على زر التأكيد
     function confirmBooking() {
         const name = document.getElementById('user-name').value;
         const date = document.getElementById('book-date').value;
         const isAr = document.getElementById('html-tag').dir === 'rtl';
 
+        // التأكد من أن المستخدم أدخل بياناته
         if (!name || !date) {
-            alert(isAr ? "يرجى تعبئة الاسم والتاريخ أولاً" : "Please fill in your name and date first");
+            alert(isAr ? "الرجاء إدخال الاسم والتاريخ أولاً" : "Please enter your name and date first");
             return;
         }
-        alert(isAr ? `شكراً ${name}! تم حجز موعدك بنجاح في تاريخ ${date}` : `Thank you ${name}! Your booking for ${date} is confirmed.`);
-        window.location.href = 'index.html';
+
+        // رسالة نجاح الحجز
+        alert(isAr ? `تم تأكيد حجزك يا ${name} بتاريخ ${date}` : `Booking confirmed for ${name} on ${date}`);
+        
+        // العودة للصفحة الرئيسية بعد الحجز
+        window.location.href = "index.html";
     }
 </script>
+
 
 </body>
 </html>
